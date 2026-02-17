@@ -6,46 +6,39 @@
 /*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 14:45:40 by jeazil            #+#    #+#             */
-/*   Updated: 2025/05/19 11:57:19 by jeazil           ###   ########.fr       */
+/*   Updated: 2025/07/02 14:30:46 by jeazil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void	tnt_strlcat(char *cpy, char *s1, const char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	size_t	i;
-	size_t	lens1;
+	int		lens1;
+	int		lens2;
+	int		k;
+	char	*str;
 
-	i = 0;
+	if (!s1 || !s2)
+		return (NULL);
 	lens1 = ft_strlen(s1);
-	while (lens1--)
+	lens2 = ft_strlen(s2);
+	str = (char *)malloc(sizeof(char) * (lens1 + lens2 + 1));
+	if (!str)
+		return (NULL);
+	k = 0;
+	while (*s1)
 	{
-		*cpy++ = *s1++;
-		i++;
+		str[k] = *s1++;
+		k++;
 	}
 	while (*s2)
 	{
-		*cpy++ = *s2++;
-		i++;
+		str[k] = *s2++;
+		k++;
 	}
-	*cpy = '\0';
-	cpy = 0;
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*s1pc;
-	char	*cpy;
-
-	s1pc = (char *)s1;
-	cpy = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!cpy)
-	{
-		return (NULL);
-	}
-	tnt_strlcat(cpy, s1pc, s2);
-	return (cpy);
+	str[k] = '\0';
+	return (str);
 }
 
 /*

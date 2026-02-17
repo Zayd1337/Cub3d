@@ -6,7 +6,7 @@
 /*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 11:16:28 by jeazil            #+#    #+#             */
-/*   Updated: 2025/05/19 11:59:58 by jeazil           ###   ########.fr       */
+/*   Updated: 2025/09/04 10:14:05 by jeazil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,3 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	new[i] = '\0';
 	return (new);
 }
-
-/*
-int	main(void)
-{
-	printf("%s\n", ft_substr("", 0, 1));
-}
-*/

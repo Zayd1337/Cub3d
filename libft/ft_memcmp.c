@@ -6,7 +6,7 @@
 /*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:54:41 by jeazil            #+#    #+#             */
-/*   Updated: 2025/05/14 15:41:52 by jeazil           ###   ########.fr       */
+/*   Updated: 2025/08/19 13:11:32 by jeazil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,3 +33,8 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 	else
 		return (0);
 }
+
+// int	main(void)
+// {
+// 	printf("%d", ft_memcmp("pouet", "pouet", 5));
+// }

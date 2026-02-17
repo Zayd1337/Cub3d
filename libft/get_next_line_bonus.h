@@ -1,20 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/28 11:58:07 by jeazil            #+#    #+#             */
-/*   Updated: 2025/08/12 16:32:57 by jeazil           ###   ########.fr       */
+/*   Created: 2025/06/03 20:25:32 by jeazil            #+#    #+#             */
+/*   Updated: 2025/07/02 14:32:34 by jeazil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
-int	ft_isdigit(int c)
-{
-	if (c >= 48 && c <= 57)
-		return (1);
-	return (0);
-}
+# include <fcntl.h>
+# include <stdarg.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <unistd.h>
+# include "libft.h"
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
+
+# ifndef MAX_FD
+#  define MAX_FD 100
+# endif
+
+char	*get_next_line(int fd);
+int		tnt_strchr(const char *s, int c);
+
+#endif
