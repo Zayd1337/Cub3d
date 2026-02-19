@@ -13,6 +13,24 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
+void	free_chain(t_temp_map **head)
+{
+	t_temp_map	*next;
+	t_temp_map	*current;
+
+	if (!head | !*head)
+		return ;
+	current = *head;
+	while (current)
+	{
+		next = current->next;
+		if (current->row)
+			free(current->row);
+		free(current);
+		current = next;
+	}
+}
+
 void	free_map(t_map *map)
 {
 	int i;
@@ -28,6 +46,9 @@ void	free_map(t_map *map)
 			free (map->textures[i]);
 		i++;
 	}
+	// free(map->temp_map);
+	// if (map->temp_map)
+	// 	free_chain(&map->temp_map);
 	free(map);
 }
 

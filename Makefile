@@ -21,6 +21,7 @@ MLX_DIR			= mlx
 PARSING_DIR		= parsing
 RAYCASTING_DIR	= raycasting
 UTILS_DIR		= utils
+# TEXTURE_DIR		= textures
 
 # -------------------- Libraries --------------------
 LIBFT_DIR       = libft
@@ -42,6 +43,7 @@ UTILS_FILES		=	debug.c\
 					ft_free.c\
 					ft_strcmp.c\
 					tools.c
+# TEXTURES_FILES	=
 
 # -------------------- Srcs --------------------
 # On ajoute le dossier srcs/ devant chaque fichier pour que la substitution fonctionne

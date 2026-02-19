@@ -35,8 +35,8 @@ typedef struct s_temp_map
 
 typedef struct s_map
 {
-	t_temp_map *temp_map;
-	char *map_stock;
+	t_temp_map *temp_map;//ok
+	char *map_stock;//used
 	//vraie map
 	char **map;
 	//textures
@@ -78,11 +78,13 @@ void	init_struct(t_ctrl *ctrl);
 bool    init_map(t_ctrl *ctrl);
 /*parsing*/
 bool	check_mapname(char *file_name);
-bool	check_input(t_ctrl *ctrl, int argc, char **argv);
+bool	set_data(t_ctrl *ctrl, int argc, char **argv);
 /*pre_map*/
 bool	correct_texture(t_ctrl *ctrl, char *line);
 bool	set_config(t_ctrl *ctrl, int fd);
 /*temp_map_tools*/
+bool	fill_temp_map(t_ctrl *ctrl, int fd);
+bool	convert_in_tab(t_ctrl *ctrl);
 t_temp_map	*add_node(char *line);
 bool	putlast(t_temp_map **head, char *line);
 void	free_list(t_temp_map **head);
@@ -104,6 +106,8 @@ bool	char_found(char *str, char *searched);
 void	free_map(t_map *map);
 void	free_all(t_ctrl *ctrl);
 void	print_map_infos(t_ctrl *ctrl);
+void	print_chain(t_temp_map **head);
+void	free_chain(t_temp_map **head);
 
 /*--------------------------------*/
 

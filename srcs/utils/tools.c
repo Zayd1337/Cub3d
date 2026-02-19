@@ -33,6 +33,22 @@ int	count_elems(char **map, char c)
 	return (count);
 }
 
+int	count_elem_to_keep(char *line, char *to_rm)
+{
+	int count;
+	int i;
+
+	count = 0;
+	i = 0;
+	while (line[i])
+	{
+		if (ft_strchr(to_rm, line[i]) == NULL)
+			count++;
+		i++;
+	}
+	return (count);
+}
+
 char *remove_chars(char *line, char *to_rm)
 {
 	int i;
@@ -40,7 +56,9 @@ char *remove_chars(char *line, char *to_rm)
 	int len;
 	char *cleaned;
 
-	len = ft_strlen(line) - count_ocurr(line, ' ');
+	if (!line)
+		return (NULL);
+	len = count_elem_to_keep(line, to_rm);
 	cleaned = malloc(sizeof(char) * len + 1);
 	if (!cleaned)
 		return (NULL);
