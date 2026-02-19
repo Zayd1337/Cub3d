@@ -1,4 +1,4 @@
-NAME            = minishell
+NAME            = cub3d
 
 # -------------------- Colors --------------------
 GREEN           = \033[0;32m
@@ -16,6 +16,11 @@ RM              = rm -rf
 SRC_DIR         = srcs
 OBJ_DIR         = obj
 INC_DIR         = includes 
+#-Subdirectories-
+MLX_DIR			= mlx
+PARSING_DIR		= parsing
+RAYCASTING_DIR	= raycasting
+UTILS_DIR		= utils
 
 # -------------------- Libraries --------------------
 LIBFT_DIR       = libft
@@ -24,9 +29,28 @@ MLX_PATH		= minilibx-linux
 MINILIBX		= $(MLX_PATH)/libmlx_Linux.a
 INCLUDES        = -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_PATH)
 
+#---------------------Files-----------------------
+MAIN_FILES		= main.c
+MLX_FILES		=
+PARSING_FILES	=	init.c\
+					parsing.c\
+					pre_map.c\
+					temp_map_tool.c\
+					texture_color.c 
+RAYCASTING_FILES = 	
+UTILS_FILES		=	debug.c\
+					ft_free.c\
+					ft_strcmp.c\
+					tools.c
+
 # -------------------- Srcs --------------------
 # On ajoute le dossier srcs/ devant chaque fichier pour que la substitution fonctionne
-SRC_FILES       = main.c parsing.c raycasting.c
+SRC_FILES       =	$(MAIN_FILES)\
+					$(addprefix $(MLX_DIR)/,$(MLX_FILES))\
+					$(addprefix $(PARSING_DIR)/,$(PARSING_FILES))\
+					$(addprefix $(RAYCASTING_DIR)/,$(RAYCASTING_FILES))\
+					$(addprefix $(UTILS_DIR)/,$(UTILS_FILES))
+
 SRCS            = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 
 # -------------------- Objects --------------------
@@ -39,7 +63,7 @@ all: $(LIBFT) $(MINILIBX) $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT) $(MINILIBX)
 	@# Ajout de -lm à la fin pour les calculs de raycasting
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MINILIBX) $(MLX_FLAGS) -lm -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MINILIBX) $(MLX_FLAGS) -lm -o $(NAME) -g
 	@echo "✨$(GREEN) $(NAME) is ready to run !$(NC)✨"
 
 $(LIBFT):
@@ -63,7 +87,7 @@ fclean: clean
 	@$(RM) $(NAME)
 	@echo "🧼$(BLUE) All clean !$(NC)🧼"
 
-re: fclean phrase all
+re: fclean all
 
 phrase:
 	@echo "$(BLUE)Ah s***, here we go again ...$(NC)"
