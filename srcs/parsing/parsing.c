@@ -13,39 +13,15 @@ bool	check_mapname(char *file_name)
 	return (false);
 }
 
-bool	fill_temp_map(t_ctrl *ctrl, int fd)
+bool	set_map(t_ctrl *ctrl, int fd)
 {
-	char *line;
-	bool	end_map;
-	
-	ctrl->map->temp_map = add_node(ctrl->map->map_stock);//init ok
-	if (!ctrl->map->temp_map)
+	if (fill_temp_map(ctrl, fd) == false)//creer une liste chainee contenant les lignes de la map
 		return (false);
-	end_map = false;
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		if (end_map == false && !ft_strcmp(line, "\n"))//faut check si y a autre chose apres
-		{
-			end_map = true;
-			free(line);
-			continue ;
-		}
-		if (!end_map && putlast(&ctrl->map->temp_map, ctrl->map->map_stock) == false)
-			return (free(line), false);
-		else if (end_map && ft_strcmp(line, "\n"))
-			return (free(line), ft_putstr_fd("There \
-				is something after the map\n", 1), false);
-		free(line);
-	}
+	if (convert_in_tab(ctrl) == false)//transforme en tab et free la liste chainee d'avant
+		return (false);
+	// print_map_infos(ctrl);
 	return (true);
 }
-
-// bool	set_map(t_ctrl *ctrl, int fd)
-// {
-// 	if (fill_temp_map(ctrl, fd) == false)
-// 		return (false);
-// 	//next step : verifier si la map est bonne puis la convertir en char **
-// }
 
 int	check_file(char *name)
 {
@@ -80,10 +56,17 @@ void	print_map_infos(t_ctrl *ctrl)
 
 	printf("config_set : %d\n", ctrl->map->config_set);
 	printf("nb_line : %d\n", ctrl->map->nb_line);
+
+	int i = 0;
+	while (ctrl->map->map[i])
+	{
+		printf("| %s\n", ctrl->map->map[i]);
+		i++;
+	}
 }
 
 //dispatchers du parsing de l'input
-bool	check_input(t_ctrl *ctrl, int argc, char **argv)
+bool	set_data(t_ctrl *ctrl, int argc, char **argv)
 {
 	int fd;
 
@@ -96,9 +79,9 @@ bool	check_input(t_ctrl *ctrl, int argc, char **argv)
 		return (printf("map init failde\n"), false);
 	if (set_config(ctrl, fd) == false)
 		return (printf("Invalid config\n"), false);
-	print_map_infos(ctrl);
-	// printf ("Time to parse the map\n");
-	// if (set_map(ctrl, fd) == false)
+	if (set_map(ctrl, fd) == false)
+		return (false);
+	// if (parse_map(ctrl) == false)
 	// 	return (false);
 	close(fd);
 	return (true);

@@ -17,13 +17,13 @@ bool set_texture(t_ctrl *ctrl, char **tabl)
 		if (ctrl->map->textures[j] != NULL)
 			return (ft_putstr_fd(tex[j], 1), ft_putstr_fd(" identifier already used\n", 1), false);
 		i = 0;
-		while (ctrl->map->textures[i] && i < 4)//pour texture
+		while (ctrl->map->textures[i] && i < 4)
 		{
 			if (!ft_strcmp(tabl[1], ctrl->map->textures[i]))
 				return (ft_putstr_fd(tabl[1], 1), ft_putstr_fd(" texture already used\n", 1), false);
 			i++;
 		}
-		ctrl->map->textures[j] = remove_chars(tabl[1], "\n");
+		ctrl->map->textures[j] = remove_chars(tabl[1], "\n \t");
 		ctrl->map->config_set++;
 		return (true);
 		j++;

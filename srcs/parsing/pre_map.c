@@ -44,7 +44,7 @@ bool	set_config(t_ctrl *ctrl, int fd)
 			free(line);
 			continue ;
 		}
-		print_map_infos(ctrl);
+		// print_map_infos(ctrl);
 		if (correct_texture(ctrl, line) == false)//defini textures
 			return (free(line), false);
 		free(line);
