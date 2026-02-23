@@ -36,36 +36,8 @@ int	check_file(char *name)
 	return (fd);
 }
 
-void	print_map_infos(t_ctrl *ctrl)
-{
-	printf ("-------PRINT INFOS-------\n");
-	if (!ctrl->map)
-		return ;
-
-	printf("SO : %s\n", ctrl->map->textures[0]);
-    printf("NO : %s\n", ctrl->map->textures[1]);
-    printf("EA : %s\n", ctrl->map->textures[2]);
-    printf("WE : %s\n", ctrl->map->textures[3]);
-
-	printf("F : [%d][%d][%d]\n", ctrl->map->color[0][0],\
-		 ctrl->map->color[0][1], ctrl->map->color[0][2]);
-	printf("F : [%d][%d][%d]\n", ctrl->map->color[1][0],\
-		 ctrl->map->color[1][1], ctrl->map->color[1][2]);
-
-	printf("config_set : %d\n", ctrl->map->config_set);
-	printf("nb_line : %zu\n", ctrl->map->nb_line);
-	printf("len_lime : %zu\n", ctrl->map->len_line);
-
-	int i = 0;
-	while (ctrl->map->map[i])
-	{
-		printf("|%s|\n", ctrl->map->map[i]);
-		i++;
-	}
-}
-
 //dispatchers du parsing de l'input
-bool	set_data(t_ctrl *ctrl, int argc, char **argv)
+bool	parse_data(t_ctrl *ctrl, int argc, char **argv)
 {
 	int fd;
 
@@ -77,14 +49,13 @@ bool	set_data(t_ctrl *ctrl, int argc, char **argv)
 	if ((fd = check_file(argv[1])) == -1)
 		return (printf("error: Invalid file\n"), false);
 	if (init_map(ctrl) == false)
-		return (printf("map init failde\n"), false);
+		return (close(fd), printf("map init failde\n"), false);
 	if (set_config(ctrl, fd) == false)
-		return (printf("Invalid config\n"), false);
+		return (close(fd), printf("Invalid config\n"), false);
 	if (set_map(ctrl, fd) == false)
-		return (false);
+		return (close(fd), false);
 	print_map_infos(ctrl);
 	if (parse_map(ctrl) == false)
-		return (false);
-	close(fd);
-	return (true);
+		return (close(fd), false);
+	return (close(fd), true);
 }

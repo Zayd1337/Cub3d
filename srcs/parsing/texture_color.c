@@ -37,7 +37,7 @@ bool	correct_RGB(t_ctrl *ctrl, char *line, int id)
 	char *clean_l;
 	int i;
 	
-	clean_l = remove_chars(line, " ");//on a une ligne sans " "
+	clean_l = remove_chars(line, " ");
 	if (!clean_l)
 		return (false);
 	rgb = ft_split(clean_l, ',');

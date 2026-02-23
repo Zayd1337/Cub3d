@@ -1,8 +1,5 @@
 #include "../../includes/cube3d.h"
 
-
-//Alors la... j'ai total forget les listes chainees...
-
 t_temp_map	*add_node(char *line)
 {
 	t_temp_map *new;
@@ -16,10 +13,9 @@ t_temp_map	*add_node(char *line)
 	if (new->row == NULL)
 		return (NULL);
 	new->next = NULL;
-	return (new);//jamais null?
+	return (new);
 }
 
-//ca peut echouer non?
 bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line)
 {
 	t_temp_map *current;
@@ -45,67 +41,19 @@ bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line)
 	return (true);
 }
 
-void	free_list(t_temp_map **head)
-{
-	t_temp_map	*next;
-	t_temp_map	*current;
-	int		size;
-
-	if (!head | !*head)
-		return ;
-	size = chainlist_size(head);
-	current = *head;
-	while (size > 0)
-	{
-		next = current->next;
-		free(current);
-		current = next;
-		size--;
-	}
-}
-
-int	chainlist_size(t_temp_map **head)
-{
-	int		size;
-	t_temp_map	*current;
-
-	if (!head || !*head)
-		return (0);
-	current = *head;
-	size = 1;
-	while (current->next != *head)
-	{
-		current = current->next;
-		size++;
-	}
-	return (size);
-}
-
-void	print_chain(t_temp_map **head)
-{
-	t_temp_map *current;
-
-	current = *head;
-	while (current != NULL)
-	{
-		printf ("|%s|\n", current->row);
-		current = current->next;
-	}
-}
-
 bool	fill_temp_map(t_ctrl *ctrl, int fd)
 {
 	char *line;
 	bool	end_map;
 	
-	ctrl->map->temp_map = add_node(ctrl->map->map_stock);//init ok
+	ctrl->map->temp_map = add_node(ctrl->map->map_stock);
 	if (!ctrl->map->temp_map)
 		return (false);
 	ctrl->map->nb_line++;
 	end_map = false;
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		if (end_map == false && !ft_strcmp(line, "\n"))//faut check si y a autre chose apres
+		if (end_map == false && !ft_strcmp(line, "\n"))
 		{
 			end_map = true;
 			free(line);
@@ -142,6 +90,7 @@ char *set_len(char *line, int len)
 	toret[i] = '\0';
 	return (toret);
 }
+
 //convert en tab rectangulaire (' ')
 bool	convert_in_tab(t_ctrl *ctrl)
 {
@@ -157,7 +106,7 @@ bool	convert_in_tab(t_ctrl *ctrl)
 	i = 0;
 	while (current)
 	{
-		ctrl->map->map[i] = set_len(current->row, ctrl->map->len_line);//current->row;
+		ctrl->map->map[i] = set_len(current->row, ctrl->map->len_line);
 		if (!ctrl->map->map[i++])
 			return (false);
 		current = current->next;

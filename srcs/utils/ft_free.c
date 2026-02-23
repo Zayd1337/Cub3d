@@ -58,8 +58,28 @@ void	free_map(t_map *map)
 	free(map);
 }
 
+void	clean_img(t_ctrl *ctrl)
+{
+	if (ctrl->img.NO.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.NO.img);
+	if (ctrl->img.SO.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.SO.img);
+	if (ctrl->img.EA.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.EA.img);
+	if (ctrl->img.WE.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.WE.img);
+}
+
 void	free_all(t_ctrl *ctrl)
 {
+	if (ctrl->win)
+        mlx_destroy_window(ctrl->mlx, ctrl->win);
+	if (ctrl->mlx)
+    {
+        mlx_destroy_display(ctrl->mlx);
+        free(ctrl->mlx);
+    }
 	if (ctrl->map)
 		free_map(ctrl->map);
+	clean_img(ctrl);
 }

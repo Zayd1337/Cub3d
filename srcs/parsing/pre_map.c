@@ -53,8 +53,6 @@ bool	set_config(t_ctrl *ctrl, int fd)
 		return (free(line), false);
 	if (!(ctrl->map->map_stock = ft_strdup(line)))
 		return (free(line), false);
-	// if (correct_files(ctrl) == false) //verifier si les fichiers donnes existe bien
-	// 	return (false);
 	return (free(line), true);
 }
 

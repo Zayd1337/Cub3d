@@ -9,7 +9,7 @@ NC              = \033[0m
 # -------------------- Compiler --------------------
 CC              = cc
 CFLAGS          = -Wall -Wextra -Werror -g
-MLX_FLAGS		= -L $(MLX_PATH) -lmlx -lXext -lX11
+MLX_FLAGS		= -L $(MLX_PATH) -lmlx -lXext -lX11 -O3
 RM              = rm -rf
 
 # -------------------- Directories --------------------
@@ -32,7 +32,7 @@ INCLUDES        = -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_PATH)
 
 #---------------------Files-----------------------
 MAIN_FILES		= main.c
-MLX_FILES		=
+MLX_FILES		= mlx.c
 PARSING_FILES	=	init.c\
 					map_parse.c\
 					parsing.c\
