@@ -34,6 +34,7 @@ INCLUDES        = -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_PATH)
 MAIN_FILES		= main.c
 MLX_FILES		=
 PARSING_FILES	=	init.c\
+					map_parse.c\
 					parsing.c\
 					pre_map.c\
 					temp_map_tool.c\

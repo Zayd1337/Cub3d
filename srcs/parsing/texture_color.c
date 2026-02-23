@@ -26,7 +26,6 @@ bool set_texture(t_ctrl *ctrl, char **tabl)
 		ctrl->map->textures[j] = remove_chars(tabl[1], "\n \t");
 		ctrl->map->config_set++;
 		return (true);
-		j++;
 	}
 	return (ft_putstr_fd(tabl[0], 1), ft_putstr_fd(" is an invalid identifier\n", 1), false);
 }

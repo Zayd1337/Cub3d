@@ -5,6 +5,7 @@ bool	correct_texture(t_ctrl *ctrl, char *line)
 {
 	char **tabl;
 	int flag_color;
+	
 	tabl = ft_split(line, ' ');
 	if (!tabl)
 		return (ft_putstr_fd("malloc error\n", 1), false);
@@ -44,7 +45,6 @@ bool	set_config(t_ctrl *ctrl, int fd)
 			free(line);
 			continue ;
 		}
-		// print_map_infos(ctrl);
 		if (correct_texture(ctrl, line) == false)//defini textures
 			return (free(line), false);
 		free(line);
@@ -53,6 +53,8 @@ bool	set_config(t_ctrl *ctrl, int fd)
 		return (free(line), false);
 	if (!(ctrl->map->map_stock = ft_strdup(line)))
 		return (free(line), false);
+	// if (correct_files(ctrl) == false) //verifier si les fichiers donnes existe bien
+	// 	return (false);
 	return (free(line), true);
 }
 
