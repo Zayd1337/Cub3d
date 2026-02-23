@@ -37,15 +37,12 @@ typedef struct s_map
 {
 	t_temp_map *temp_map;//ok
 	char *map_stock;//used
-	//vraie map
 	char **map;
-	//textures
 	int	config_set;//<6 = pas fini d'allouer
 	char *textures[4];//N, S, E, W,
-	//couleurs RGB 
 	int color[2][3];//F, C
-	//dimensions
-	int nb_line;
+	size_t nb_line;
+	size_t	len_line;
 } t_map;
 
 typedef struct s_data
@@ -76,7 +73,10 @@ int	end(t_ctrl *ctrl);
 void init_textures_colors(t_map *map);
 void	init_struct(t_ctrl *ctrl);
 bool    init_map(t_ctrl *ctrl);
+/*map_parse*/
+bool	parse_map(t_ctrl *ctrl);
 /*parsing*/
+int	check_file(char *name);
 bool	check_mapname(char *file_name);
 bool	set_data(t_ctrl *ctrl, int argc, char **argv);
 /*pre_map*/
@@ -86,7 +86,7 @@ bool	set_config(t_ctrl *ctrl, int fd);
 bool	fill_temp_map(t_ctrl *ctrl, int fd);
 bool	convert_in_tab(t_ctrl *ctrl);
 t_temp_map	*add_node(char *line);
-bool	putlast(t_temp_map **head, char *line);
+bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line);
 void	free_list(t_temp_map **head);
 int	chainlist_size(t_temp_map **head);
 /*texture_color*/

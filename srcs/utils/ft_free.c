@@ -35,15 +35,21 @@ void	free_map(t_map *map)
 {
 	int i;
 
-	if (map->map_stock)
-		free(map->map_stock);
+	// if (map->map_stock)
+	// 	free(map->map_stock);
 	if (map->map)
 		free_tab(map->map);
+	if (map->temp_map)
+		free_chain(&map->temp_map);
+	// free(map->temp_map);
 	i = 0;
 	while (i < 4)
 	{
 		if (map->textures[i])
+		{
+			// printf ("cleanned=%s is free\n", map->textures[i]);
 			free (map->textures[i]);
+		}
 		i++;
 	}
 	// free(map->temp_map);

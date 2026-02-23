@@ -13,16 +13,18 @@ t_temp_map	*add_node(char *line)
 	if ((new = malloc(sizeof(t_temp_map))) == NULL)
 		return (NULL);
 	new->row = remove_chars(line, "\n");
+	if (new->row == NULL)
+		return (NULL);
 	new->next = NULL;
-	// printf ("line = %s\n", new->row);
-	return (new);
+	return (new);//jamais null?
 }
 
 //ca peut echouer non?
-bool	putlast(t_temp_map **head, char *line)
+bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line)
 {
 	t_temp_map *current;
 	t_temp_map *new;
+	size_t len;
 
 	if (!line)
 		return (false);
@@ -38,6 +40,8 @@ bool	putlast(t_temp_map **head, char *line)
 	while (current->next != NULL)
 		current = current->next;
 	current->next = new;
+	if (ctrl->map->len_line < (len = ft_strlen(line)))
+		ctrl->map->len_line = len;
 	return (true);
 }
 
@@ -84,11 +88,10 @@ void	print_chain(t_temp_map **head)
 	current = *head;
 	while (current != NULL)
 	{
-		printf ("| %s\n", current->row);
+		printf ("|%s|\n", current->row);
 		current = current->next;
 	}
 }
-
 
 bool	fill_temp_map(t_ctrl *ctrl, int fd)
 {
@@ -108,17 +111,38 @@ bool	fill_temp_map(t_ctrl *ctrl, int fd)
 			free(line);
 			continue ;
 		}
-		if (!end_map && putlast(&ctrl->map->temp_map, line) == false)
+		if (!end_map && putlast(ctrl, &ctrl->map->temp_map, line) == false)
 			return (free(line), false);
 		else if (end_map && ft_strcmp(line, "\n"))
-			return (free(line), ft_putstr_fd("There \
-				is something after the map\n", 1), false);
+			return (free(line), ft_putstr_fd("There is something after the map\n", 1), false);
 		ctrl->map->nb_line++;
 		free(line);
 	}
 	return (true);
 }
 
+char *set_len(char *line, int len)
+{
+	char *toret;
+	int i;
+
+	if (len == 0)
+		return (NULL);
+	toret = malloc(sizeof(char) * (len + 1));
+	if (!toret)
+		return (NULL);
+	i = 0;
+	while (*line)
+	{
+		toret[i++] = *line;
+		line++;
+	}
+	while (i < len)
+		toret[i++] = ' ';
+	toret[i] = '\0';
+	return (toret);
+}
+//convert en tab rectangulaire (' ')
 bool	convert_in_tab(t_ctrl *ctrl)
 {
 	t_temp_map *current;
@@ -133,12 +157,11 @@ bool	convert_in_tab(t_ctrl *ctrl)
 	i = 0;
 	while (current)
 	{
-		ctrl->map->map[i++] = current->row;
-		current->row = NULL;
+		ctrl->map->map[i] = set_len(current->row, ctrl->map->len_line);//current->row;
+		if (!ctrl->map->map[i++])
+			return (false);
 		current = current->next;
 	}
 	ctrl->map->map[i] = NULL;
-	if (ctrl->map->temp_map)
-		free_chain(&ctrl->map->temp_map);
 	return (true);
 }

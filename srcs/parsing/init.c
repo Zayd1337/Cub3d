@@ -26,6 +26,7 @@ bool    init_map(t_ctrl *ctrl)
     ctrl->map->map_stock = NULL;
     ctrl->map->map = NULL;
     ctrl->map->nb_line = 0;
+    ctrl->map->len_line = 0;
     ctrl->map->config_set = 0;
     init_textures_colors(ctrl->map);
     return (true);
