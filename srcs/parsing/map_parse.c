@@ -1,85 +1,51 @@
 #include "../../includes/cube3d.h"
 
-//The map must be composed of only 6 possible characters: 0 for an empty space,
-//1 for a wall, and N,S,E or W for the player’s start position and spawning
-//orientationentation
-
-// bool	clean_line(char *line, char *ok)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while (line[i])
-// 	{
-// 		if (ft_strchr(ok, line[i]) == NULL)
-// 			return (false);
-// 		i++;
-// 	}
-// 	return (true);
-// }
-
-bool	correct_elems(char **map)
+void	set_orientation(char o, t_ctrl *ctrl)
 {
-	int i;
-	int j;
-	bool orientation;
+	if (o == 'N')
+		ctrl->map->orientation = 0;
+	if (o == 'S')
+		ctrl->map->orientation = 1;
+	if (o == 'E')
+		ctrl->map->orientation = 2;
+	if (o == 'W')
+		ctrl->map->orientation = 3;
+}
 
-	orientation = false;
-	j = 0;
-	while (map[j])
+bool	correct_elems(t_ctrl *ctrl, char **map)
+{
+	int	i;
+	int	j;
+	int	player;
+
+	player = 0;
+	j = -1;
+	while (map[++j])
 	{
-		i = 0;
-		while (map[j][i])
+		i = -1;
+		while (map[j][++i])
 		{
-			if (ft_strchr("10 ", map[j][i]) == NULL)//si autre
+			if (!ft_strchr("10 EWSN", map[j][i]))
+				return (ft_putstr_fd("Error\nInvalid char in map\n", 2), false);
+			if (ft_strchr("EWSN", map[j][i]))
 			{
-				// printf ("special char : %c\n", map[j][i]);
-				if (ft_strchr("EWSN", map[j][i]) == NULL)
-					return (printf ("Invalid character has been detected\n"), false);
-				orientation = !orientation;//sense passer a true a la 1ere occurence
-				// printf ("ori : %d\n", orientation);
-				if (orientation == false)//si c pas la 1ere fois...
-					return (printf ("More than one orientation has been detected\n"), false);
-			}	
-			i++;
+				if (++player > 1)
+					return (ft_putstr_fd("Error\nMultiplayer is not allowed\n",
+							1), false);
+				set_orientation(map[j][i], ctrl);
+			}
 		}
-		j++;
 	}
+	if (player == 0)
+		return (ft_putstr_fd("Error\nNo spawn point detected\n", 1), false);
 	return (true);
 }
 
-// bool	check_walls(t_ctrl *ctrl, char **map, int i, int j)
-// {
-// 	int j;
-// 	int i;
-
-// 	j = 0;
-// 	while (map[j])
-// 	{
-// 		i = 0;
-// 		while(map[j][i])
-// 		{
-// 			if ((!map[j][i - 1] || map[j][i - 1] == ' ') && map[j][i] != '1')
-// 				return (false);
-// 			if ((!map[j][i + 1] || map[j][i + 1] == ' ') && map[j][i] != '1')
-// 				return (false);
-// 			if ((!map[j - 1][i] || map[j - 1][i] == ' ') && map[j][i] != '1')
-// 				return (false);
-// 			if ((!map[j + 1][i] || map[j + 1][i] == ' ') && map[j][i] != '1')
-// 				return (false);
-// 			i++;
-// 		}
-// 		j++;
-// 	}
-// 	return (true);
-// }
-
-//closed/surrounded by walls
-
+// closed/surrounded by walls
 bool	check_walls(t_ctrl *ctrl, char **map, int i, int j)
 {
-	//tout le tours de la map
-	if (i == 0 || j == 0 || i == (int)ctrl->map->len_line - 1 || j == (int)ctrl->map->nb_line - 1)
+	if (i == 0 || j == 0 || i == (int)ctrl->map->len_line - 1
+		|| j == (int)ctrl->map->nb_line - 1)
 		return (false);
 	if (map[j][i - 1] == ' ')
 		return (false);
@@ -102,8 +68,8 @@ bool	check_walls(t_ctrl *ctrl, char **map, int i, int j)
 
 bool	correct_walls(t_ctrl *ctrl, char **map)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	j = 0;
 	while (map[j])
@@ -111,24 +77,23 @@ bool	correct_walls(t_ctrl *ctrl, char **map)
 		i = 0;
 		while (map[j][i])
 		{
-			if (map[j][i] == '0' && check_walls(ctrl, map, i, j) == false)
-			{
-				printf ("\nline %s is KO\n", map[j]);
-				ft_putstr_fd("error: Map isn't correctly surrounded by walls\n", 1);
-				return (false);
-			}
+			if (ft_strchr("0NSEW", map[j][i]) && check_walls(ctrl, map, i,
+					j) == false)
+				return (ft_putstr_fd("Error\nMap isn't correctly enclosed\n",
+						1), false);
 			i++;
 		}
 		j++;
 	}
-	printf("\nwalls are OK\n");
 	return (true);
 }
 
 bool	parse_map(t_ctrl *ctrl)
 {
-	if (correct_elems(ctrl->map->map) == false)
+	if (correct_elems(ctrl, ctrl->map->map) == false)
 		return (false);
+	if (ctrl->map->orientation == -1)
+		return (ft_putstr_fd("Missing player\n", 1), false);
 	if (correct_walls(ctrl, ctrl->map->map) == false)
 		return (false);
 	return (true);

@@ -1,45 +1,61 @@
 #include "../../includes/cube3d.h"
 
-void init_textures_colors(t_map *map)
+bool	init_minilibx(t_ctrl *ctrl)
 {
-    // Floor
-    map->color[0][0] = -1;
-    map->color[0][1] = -1;
-    map->color[0][2] = -1;
-    // Ceiling
-    map->color[1][0] = -1;
-    map->color[1][1] = -1;
-    map->color[1][2] = -1;
-    // Textures
-    map->textures[0] = NULL;
-    map->textures[1] = NULL;
-    map->textures[2] = NULL;
-    map->textures[3] = NULL;
+	ctrl->mlx = mlx_init();
+	if (!ctrl->mlx)
+		return (printf("error malloc init 1\n"), false);
+	ctrl->win = mlx_new_window(ctrl->mlx, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
+	if (!ctrl->win)
+		return (printf("error malloc init 2\n"), false);
+	if (set_img(ctrl) == false)
+		return (printf("Invalid file detected\n"), false);
+	return (true);
 }
 
-bool    init_map(t_ctrl *ctrl)
+void	init_textures_colors(t_map *map)
 {
-    ctrl->map = malloc(sizeof(t_map));
-    if (!ctrl->map)
-        return (false);
-    ctrl->map->temp_map = NULL;
-    ctrl->map->map_stock = NULL;
-    ctrl->map->map = NULL;
-    ctrl->map->nb_line = 0;
-    ctrl->map->len_line = 0;
-    ctrl->map->config_set = 0;
-    init_textures_colors(ctrl->map);
-    return (true);
+	// Floor
+	map->color[0][0] = -1;
+	map->color[0][1] = -1;
+	map->color[0][2] = -1;
+	// Ceiling
+	map->color[1][0] = -1;
+	map->color[1][1] = -1;
+	map->color[1][2] = -1;
+	// Textures
+	map->textures[0] = NULL;
+	map->textures[1] = NULL;
+	map->textures[2] = NULL;
+	map->textures[3] = NULL;
+}
+
+bool	init_map(t_ctrl *ctrl, char *name)
+{
+	ctrl->map = malloc(sizeof(t_map));
+	if (!ctrl->map)
+		return (false);
+	if (name)
+		ctrl->map->name = ft_strdup(name);
+	ctrl->map->temp_map = NULL;
+	ctrl->map->map_stock = NULL;
+	ctrl->map->map = NULL;
+	ctrl->map->nb_line = 0;
+	ctrl->map->len_line = 0;
+	ctrl->map->config_set = 0;
+	ctrl->map->orientation = -1;
+	init_textures_colors(ctrl->map);
+	return (true);
 }
 
 void	init_struct(t_ctrl *ctrl)
 {
-    ctrl->map = NULL;
-    ctrl->mlx = NULL;
-    ctrl->win = NULL;
-    ctrl->size = NULL;
-	// ctrl->map->NO_t = NULL;
-	// ctrl->map->SO_t = NULL;
-	// ctrl->map->EA_t = NULL;
-	// ctrl->map->WE_t = NULL;
+	ctrl->map = NULL;
+	ctrl->win = NULL;
+	ctrl->mlx = NULL;
+	ctrl->size = NULL;
+	ctrl->img.NO.img = NULL;
+	ctrl->img.SO.img = NULL;
+	ctrl->img.EA.img = NULL;
+	ctrl->img.WE.img = NULL;
 }

@@ -35,8 +35,8 @@ int	count_elems(char **map, char c)
 
 int	count_elem_to_keep(char *line, char *to_rm)
 {
-	int count;
-	int i;
+	int	count;
+	int	i;
 
 	count = 0;
 	i = 0;
@@ -49,12 +49,12 @@ int	count_elem_to_keep(char *line, char *to_rm)
 	return (count);
 }
 
-char *remove_chars(char *line, char *to_rm)
+char	*remove_chars(char *line, char *to_rm)
 {
-	int i;
-	int k;
-	int len;
-	char *cleaned;
+	int		i;
+	int		k;
+	int		len;
+	char	*cleaned;
 
 	if (!line)
 		return (NULL);

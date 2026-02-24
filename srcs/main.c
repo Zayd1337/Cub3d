@@ -3,13 +3,16 @@
 int	main(int argc, char **argv)
 {
 	t_ctrl	ctrl;
-	// char	**map;
 
 	init_struct(&ctrl);
-	if (set_data(&ctrl, argc, argv) == false)
-		return (free_all(&ctrl), 1);//printf("Error\nInvalid input\n"), 
-	// // mlx_hook(ctrl.win, KeyPress, KeyPressMask, &keypress, &ctrl);//attends les input clavier
-	// mlx_hook(ctrl.win, 17, 0, &end, &ctrl);
-	// mlx_loop(ctrl.mlx);
-	return (free_all(&ctrl), 0);
+	if (parse_data(&ctrl, argc, argv) == false)
+		return (free_all(&ctrl), 1);
+	if (init_minilibx(&ctrl) == false)
+		return (free_all(&ctrl), 1);
+	// if (raycasting() == false)
+	// 	return (false);
+	mlx_hook(ctrl.win, KeyPress, KeyPressMask, &keypress, &ctrl);//attends les input clavier, ESC
+	mlx_hook(ctrl.win, DestroyNotify, 0, &end, &ctrl);//gestion croix fenetre
+	mlx_loop(ctrl.mlx);
+	return (free_all(&ctrl), 0);//jamais atteint normalement
 }

@@ -18,7 +18,7 @@
 # include <X11/keysym.h>
 #include <stdbool.h>
 
-# define WIN_WIDTH 960 
+# define WIN_WIDTH 1280 
 # define WIN_HEIGHT 720
 
 typedef struct s_xy
@@ -27,25 +27,30 @@ typedef struct s_xy
 	int y;
 } t_xy;
 
-typedef struct s_temp_map
+typedef struct s_temp_map//parsing only
 {
 	char *row;
 	struct s_temp_map *next;
 } t_temp_map;
 
-typedef struct s_map
+typedef struct s_map//parsing surtout
 {
+	char *name;
+
 	t_temp_map *temp_map;//ok
 	char *map_stock;//used
 	char **map;
 	int	config_set;//<6 = pas fini d'allouer
-	char *textures[4];//N, S, E, W,
+
+	char *textures[4];//N, S, E, W
 	int color[2][3];//F, C
+
 	size_t nb_line;
 	size_t	len_line;
+	int	orientation;//NO=0 SO=1 EA=2 WE=3
 } t_map;
 
-typedef struct s_data
+typedef struct s_data//mlx img
 {
 	void			*img;
 	char			*addr;
@@ -54,12 +59,22 @@ typedef struct s_data
 	int				endian;
 }					t_data;
 
+typedef struct s_images
+{
+	t_data	NO;
+	t_data	SO;
+	t_data	EA;
+	t_data	WE;
+	t_xy	dimension;
+} t_images;
+
 typedef struct s_ctrl
 {
 	void			*mlx;
 	void			*win;
 	t_map 			*map;
 	t_xy			*size;
+	t_images		img;
 	
 } t_ctrl ;
 
@@ -67,18 +82,21 @@ typedef struct s_ctrl
 /*---------------MLX-----------------*/
 /*mlx*/
 int	end(t_ctrl *ctrl);
+int	keypress(int keysym, t_ctrl *ctrl);
+bool	set_img(t_ctrl *ctrl);
 
 /*----------------PARSING----------------*/
 /*init*/
+bool    init_minilibx(t_ctrl *ctrl);
 void init_textures_colors(t_map *map);
 void	init_struct(t_ctrl *ctrl);
-bool    init_map(t_ctrl *ctrl);
+bool    init_map(t_ctrl *ctrl, char *name);
 /*map_parse*/
 bool	parse_map(t_ctrl *ctrl);
 /*parsing*/
 int	check_file(char *name);
 bool	check_mapname(char *file_name);
-bool	set_data(t_ctrl *ctrl, int argc, char **argv);
+bool	parse_data(t_ctrl *ctrl, int argc, char **argv);
 /*pre_map*/
 bool	correct_texture(t_ctrl *ctrl, char *line);
 bool	set_config(t_ctrl *ctrl, int fd);
@@ -91,7 +109,7 @@ void	free_list(t_temp_map **head);
 int	chainlist_size(t_temp_map **head);
 /*texture_color*/
 bool set_texture(t_ctrl *ctrl, char **tabl);
-bool	correct_RGB(t_ctrl *ctrl, char *line, int id);
+bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id);
 int	set_color(t_ctrl *ctrl, char **tabl);
 
 /*----------------RAYCASTING----------------*/
@@ -108,6 +126,7 @@ void	free_all(t_ctrl *ctrl);
 void	print_map_infos(t_ctrl *ctrl);
 void	print_chain(t_temp_map **head);
 void	free_chain(t_temp_map **head);
+char	**split_tab(char const *s, char *rm);
 
 /*--------------------------------*/
 
