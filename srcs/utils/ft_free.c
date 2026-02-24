@@ -2,7 +2,7 @@
 
 void	free_tab(char **tab)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	while (tab[j])
@@ -33,28 +33,20 @@ void	free_chain(t_temp_map **head)
 
 void	free_map(t_map *map)
 {
-	int i;
+	int	i;
 
-	// if (map->map_stock)
-	// 	free(map->map_stock);
+	if (map->name)
+		free(map->name);
 	if (map->map)
 		free_tab(map->map);
 	if (map->temp_map)
 		free_chain(&map->temp_map);
-	// free(map->temp_map);
-	i = 0;
-	while (i < 4)
+	i = -1;
+	while (++i < 4)
 	{
 		if (map->textures[i])
-		{
-			// printf ("cleanned=%s is free\n", map->textures[i]);
-			free (map->textures[i]);
-		}
-		i++;
+			free(map->textures[i]);
 	}
-	// free(map->temp_map);
-	// if (map->temp_map)
-	// 	free_chain(&map->temp_map);
 	free(map);
 }
 
@@ -72,14 +64,14 @@ void	clean_img(t_ctrl *ctrl)
 
 void	free_all(t_ctrl *ctrl)
 {
+	clean_img(ctrl);
 	if (ctrl->win)
-        mlx_destroy_window(ctrl->mlx, ctrl->win);
+		mlx_destroy_window(ctrl->mlx, ctrl->win);
 	if (ctrl->mlx)
-    {
-        mlx_destroy_display(ctrl->mlx);
-        free(ctrl->mlx);
-    }
+	{
+		mlx_destroy_display(ctrl->mlx);
+		free(ctrl->mlx);
+	}
 	if (ctrl->map)
 		free_map(ctrl->map);
-	clean_img(ctrl);
 }

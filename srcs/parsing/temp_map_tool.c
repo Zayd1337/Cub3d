@@ -2,7 +2,7 @@
 
 t_temp_map	*add_node(char *line)
 {
-	t_temp_map *new;
+	t_temp_map	*new;
 
 	if (!line)
 		return (NULL);
@@ -18,9 +18,9 @@ t_temp_map	*add_node(char *line)
 
 bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line)
 {
-	t_temp_map *current;
-	t_temp_map *new;
-	size_t len;
+	t_temp_map	*current;
+	t_temp_map	*new;
+	size_t		len;
 
 	if (!line)
 		return (false);
@@ -43,36 +43,36 @@ bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line)
 
 bool	fill_temp_map(t_ctrl *ctrl, int fd)
 {
-	char *line;
+	char	*line;
 	bool	end_map;
-	
-	ctrl->map->temp_map = add_node(ctrl->map->map_stock);
-	if (!ctrl->map->temp_map)
-		return (false);
-	ctrl->map->nb_line++;
+
 	end_map = false;
-	while ((line = get_next_line(fd)) != NULL)
+	line = ctrl->map->map_stock;
+	while (line != NULL)
 	{
 		if (end_map == false && !ft_strcmp(line, "\n"))
-		{
 			end_map = true;
-			free(line);
-			continue ;
+		else
+		{
+			if (!end_map && putlast(ctrl, &ctrl->map->temp_map, line) == false)
+				return (free(line), false);
+			if (end_map && ft_strcmp(line, "\n"))
+				return (free(line),
+					ft_putstr_fd("There is something after the map\n", 1),
+					false);
+			ctrl->map->nb_line++;
 		}
-		if (!end_map && putlast(ctrl, &ctrl->map->temp_map, line) == false)
-			return (free(line), false);
-		else if (end_map && ft_strcmp(line, "\n"))
-			return (free(line), ft_putstr_fd("There is something after the map\n", 1), false);
-		ctrl->map->nb_line++;
 		free(line);
+		line = get_next_line(fd);
 	}
+	free(line);
 	return (true);
 }
 
-char *set_len(char *line, int len)
+char	*set_len(char *line, int len)
 {
-	char *toret;
-	int i;
+	char	*toret;
+	int		i;
 
 	if (len == 0)
 		return (NULL);
@@ -91,15 +91,14 @@ char *set_len(char *line, int len)
 	return (toret);
 }
 
-//convert en tab rectangulaire (' ')
 bool	convert_in_tab(t_ctrl *ctrl)
 {
-	t_temp_map *current;
-	int i;
+	t_temp_map	*current;
+	int			i;
 
 	if (!ctrl->map || !ctrl->map->temp_map)
 		return (false);
-	ctrl->map->map = malloc(sizeof(char*) * (ctrl->map->nb_line + 1));
+	ctrl->map->map = ft_calloc((ctrl->map->nb_line + 1), sizeof(char *));
 	if (!ctrl->map->map)
 		return (false);
 	current = ctrl->map->temp_map;
@@ -111,6 +110,5 @@ bool	convert_in_tab(t_ctrl *ctrl)
 			return (false);
 		current = current->next;
 	}
-	ctrl->map->map[i] = NULL;
 	return (true);
 }

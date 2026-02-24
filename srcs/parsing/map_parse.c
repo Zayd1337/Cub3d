@@ -14,37 +14,38 @@ void	set_orientation(char o, t_ctrl *ctrl)
 
 bool	correct_elems(t_ctrl *ctrl, char **map)
 {
-	int i;
-	int j;
-	bool orientation;
+	int	i;
+	int	j;
+	int	player;
 
-	orientation = false;
-	j = 0;
-	while (map[j])
+	player = 0;
+	j = -1;
+	while (map[++j])
 	{
-		i = 0;
-		while (map[j][i])
+		i = -1;
+		while (map[j][++i])
 		{
-			if (ft_strchr("10 ", map[j][i]) == NULL)
+			if (!ft_strchr("10 EWSN", map[j][i]))
+				return (ft_putstr_fd("Error\nInvalid char in map\n", 2), false);
+			if (ft_strchr("EWSN", map[j][i]))
 			{
-				if (ft_strchr("EWSN", map[j][i]) == NULL)
-					return (printf ("Invalid character has been detected\n"), false);
-				orientation = !orientation;//sense passer a true a la 1ere occurence
-				if (orientation == false)//si c pas la 1ere fois...
-					return (printf ("More than one orientation has been detected\n"), false);
+				if (++player > 1)
+					return (ft_putstr_fd("Error\nMultiplayer is not allowed\n",
+							1), false);
 				set_orientation(map[j][i], ctrl);
-			}	
-			i++;
+			}
 		}
-		j++;
 	}
+	if (player == 0)
+		return (ft_putstr_fd("Error\nNo spawn point detected\n", 1), false);
 	return (true);
 }
 
-//closed/surrounded by walls
+// closed/surrounded by walls
 bool	check_walls(t_ctrl *ctrl, char **map, int i, int j)
 {
-	if (i == 0 || j == 0 || i == (int)ctrl->map->len_line - 1 || j == (int)ctrl->map->nb_line - 1)
+	if (i == 0 || j == 0 || i == (int)ctrl->map->len_line - 1
+		|| j == (int)ctrl->map->nb_line - 1)
 		return (false);
 	if (map[j][i - 1] == ' ')
 		return (false);
@@ -67,8 +68,8 @@ bool	check_walls(t_ctrl *ctrl, char **map, int i, int j)
 
 bool	correct_walls(t_ctrl *ctrl, char **map)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	j = 0;
 	while (map[j])
@@ -76,17 +77,14 @@ bool	correct_walls(t_ctrl *ctrl, char **map)
 		i = 0;
 		while (map[j][i])
 		{
-			if (map[j][i] == '0' && check_walls(ctrl, map, i, j) == false)
-			{
-				printf ("\nline %s is KO\n", map[j]);
-				ft_putstr_fd("error: Map isn't correctly surrounded by walls\n", 1);
-				return (false);
-			}
+			if (ft_strchr("0NSEW", map[j][i]) && check_walls(ctrl, map, i,
+					j) == false)
+				return (ft_putstr_fd("Error\nMap isn't correctly enclosed\n",
+						1), false);
 			i++;
 		}
 		j++;
 	}
-	printf("\nwalls are OK\n");
 	return (true);
 }
 
@@ -95,7 +93,7 @@ bool	parse_map(t_ctrl *ctrl)
 	if (correct_elems(ctrl, ctrl->map->map) == false)
 		return (false);
 	if (ctrl->map->orientation == -1)
-		return (ft_putstr_fd("Missing orientation\n", 1), false);
+		return (ft_putstr_fd("Missing player\n", 1), false);
 	if (correct_walls(ctrl, ctrl->map->map) == false)
 		return (false);
 	return (true);

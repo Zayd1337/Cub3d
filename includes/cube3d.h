@@ -35,6 +35,8 @@ typedef struct s_temp_map//parsing only
 
 typedef struct s_map//parsing surtout
 {
+	char *name;
+
 	t_temp_map *temp_map;//ok
 	char *map_stock;//used
 	char **map;
@@ -88,7 +90,7 @@ bool	set_img(t_ctrl *ctrl);
 bool    init_minilibx(t_ctrl *ctrl);
 void init_textures_colors(t_map *map);
 void	init_struct(t_ctrl *ctrl);
-bool    init_map(t_ctrl *ctrl);
+bool    init_map(t_ctrl *ctrl, char *name);
 /*map_parse*/
 bool	parse_map(t_ctrl *ctrl);
 /*parsing*/
@@ -107,7 +109,7 @@ void	free_list(t_temp_map **head);
 int	chainlist_size(t_temp_map **head);
 /*texture_color*/
 bool set_texture(t_ctrl *ctrl, char **tabl);
-bool	correct_RGB(t_ctrl *ctrl, char *line, int id);
+bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id);
 int	set_color(t_ctrl *ctrl, char **tabl);
 
 /*----------------RAYCASTING----------------*/
@@ -124,6 +126,7 @@ void	free_all(t_ctrl *ctrl);
 void	print_map_infos(t_ctrl *ctrl);
 void	print_chain(t_temp_map **head);
 void	free_chain(t_temp_map **head);
+char	**split_tab(char const *s, char *rm);
 
 /*--------------------------------*/
 

@@ -43,7 +43,8 @@ RAYCASTING_FILES =
 UTILS_FILES		=	debug.c\
 					ft_free.c\
 					ft_strcmp.c\
-					tools.c
+					tools.c\
+					split_tab.c
 # TEXTURES_FILES	=
 
 # -------------------- Srcs --------------------
