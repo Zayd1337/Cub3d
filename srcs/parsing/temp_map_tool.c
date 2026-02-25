@@ -57,7 +57,7 @@ int	fill_temp_map(t_ctrl *ctrl, int fd)
 			if (!end_map && putlast(ctrl, &ctrl->map->temp_map, line) == false)
 				return (free(line), MALLOC);
 			if (end_map && ft_strcmp(line, "\n"))
-				return (free(line),	STR_AFTER);
+				return (free(line), STR_AFTER);
 			ctrl->map->nb_line++;
 		}
 		free(line);

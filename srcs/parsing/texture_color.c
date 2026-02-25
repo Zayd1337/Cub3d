@@ -27,6 +27,29 @@ int	set_texture(t_ctrl *ctrl, char **tabl)
 	return ((ctrl->error = error_config(ctrl)), ctrl->error);
 }
 
+// bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (tabl[++i])
+// 	{
+// 		if (ft_atoi(tabl[i]) < 0 || ft_atoi(tabl[i]) > 255)
+// 			return (false);
+// 		ctrl->map->color[id][i - 1] = ft_atoi(tabl[i]);
+// 	}
+// 	if (i < 4)
+// 		return (false);
+// 	ctrl->map->colors_set++;
+// 	return (true);
+// }
+
+//donne le bon format couleur pour my_mlx_pixel_put() 
+int	convert_rgb(int r, int g, int b)
+{
+	return (r << 16 | g << 8 | b);
+}
+
 bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id)
 {
 	int	i;
@@ -36,10 +59,10 @@ bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id)
 	{
 		if (ft_atoi(tabl[i]) < 0 || ft_atoi(tabl[i]) > 255)
 			return (false);
-		ctrl->map->color[id][i - 1] = ft_atoi(tabl[i]);
 	}
 	if (i < 4)
 		return (false);
+	ctrl->map->color[id] = convert_rgb(tabl[1][0], tabl[1][1], tabl[1][2]);
 	ctrl->map->colors_set++;
 	return (true);
 }
@@ -59,7 +82,7 @@ int	set_color(t_ctrl *ctrl, char **tabl)
 	i = -1;
 	while (++i < 3)
 	{
-		if (ctrl->map->color[type][i] != -1)
+		if (ctrl->map->color[type] != -1)
 			return ((ctrl->error = INVALID_CONFIG), ctrl->error);
 	}
 	if (correct_RGB(ctrl, tabl, type) == false)

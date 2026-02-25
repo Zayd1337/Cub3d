@@ -35,7 +35,7 @@ bool	map_found(t_ctrl *ctrl, char *line)
 	return (false);
 }
 
-int	error_config(t_ctrl *ctrl)//ameliorer?
+int	error_config(t_ctrl *ctrl) // ameliorer?
 {
 	if (ctrl->map->colors_set + ctrl->map->textures_set < 6)
 	{
@@ -75,5 +75,5 @@ int	set_config(t_ctrl *ctrl, int fd)
 	if (line && !(ctrl->map->map_stock = ft_strdup(line)))
 		return ((ctrl->error = MALLOC), ctrl->error);
 	free(line);
-	return (SUCCES);//!!! rigueur de l'assignation de error
+	return (SUCCES); //!!! rigueur de l'assignation de error
 }

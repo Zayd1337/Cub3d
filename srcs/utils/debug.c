@@ -25,11 +25,9 @@ void	print_map_infos(t_ctrl *ctrl)
 		printf("EA : %s\n", ctrl->map->textures[2]);
 	if (ctrl->map->textures[3])
 		printf("WE : %s\n", ctrl->map->textures[3]);
-
-	printf("F : [%d][%d][%d]\n", ctrl->map->color[0][0], ctrl->map->color[0][1],
-		ctrl->map->color[0][2]);
-	printf("F : [%d][%d][%d]\n", ctrl->map->color[1][0], ctrl->map->color[1][1],
-		ctrl->map->color[1][2]);
+		
+	printf ("RGB floor: %d\n", ctrl->map->color[0]);
+	printf ("RGB ceiling: %d\n", ctrl->map->color[1]);
 
 	printf("config_set : %d\n", ctrl->map->textures_set);
 	printf("config_set : %d\n", ctrl->map->colors_set);

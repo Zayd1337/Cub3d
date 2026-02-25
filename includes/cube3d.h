@@ -35,7 +35,7 @@ typedef enum e_error
 	CONFIG_MISSING = 3,
 	MAP_MISSING = 4,
 	MISSPLACED_ELEM = 5,
-	
+
 	//parsemap
 	INVALID_CHAR = 6,
 	MULTIPLAYER = 7,
@@ -72,7 +72,7 @@ typedef struct s_map//parsing surtout
 	bool map_set;//== 0 = pas fini d'allouer
 
 	char *textures[4];//N, S, E, W
-	int color[2][3];//F, C
+	int color[2];//F, C
 
 	size_t nb_line;
 	size_t	len_line;
@@ -101,12 +101,11 @@ typedef struct s_ctrl
 {
 	void			*mlx;
 	void			*win;
-	t_map 			*map;
-	t_xy			*size;
+	t_map 			*map; 
 	t_images		img;
-	t_error			error;
-
+	t_xy			player;
 	
+	t_error			error;
 } t_ctrl ;
 
 
@@ -145,6 +144,8 @@ bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id);
 int	set_color(t_ctrl *ctrl, char **tabl);
 
 /*----------------RAYCASTING----------------*/
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+int	convert_rgb(int r, int g, int b);
 
 /*-------------UTILS----------------*/
 void	free_tab(char **tab);
