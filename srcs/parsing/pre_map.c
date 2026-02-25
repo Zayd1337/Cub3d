@@ -1,21 +1,21 @@
 #include "../../includes/cube3d.h"
 
-bool	correct_texture(t_ctrl *ctrl, char *line)
+int	correct_texture(t_ctrl *ctrl, char *line)
 {
 	char	**tabl;
 	int		flag_color;
 
 	tabl = split_tab(line, " \t\n,");
 	if (!tabl)
-		return (ft_putstr_fd("malloc error\n", 1), false);
-	if ((flag_color = set_color(ctrl, tabl)) == -1)
-		return (free_tab(tabl), false);
-	if (flag_color == 0 && set_texture(ctrl, tabl) == false)
-		return (free_tab(tabl), false);
-	return (free_tab(tabl), true);
+		return ((ctrl->error = MALLOC), ctrl->error);
+	if ((flag_color = set_color(ctrl, tabl)) == INVALID_CONFIG)
+		return (free_tab(tabl), ctrl->error);
+	if (flag_color == 0 && set_texture(ctrl, tabl) != SUCCES)
+		return (free_tab(tabl), ctrl->error);
+	return (free_tab(tabl), SUCCES);
 }
 
-bool	map_found(char *line)
+bool	map_found(t_ctrl *ctrl, char *line)
 {
 	int	i;
 
@@ -28,31 +28,52 @@ bool	map_found(char *line)
 		|| !ft_strncmp(line, "WE", 2) || !ft_strncmp(line, "EA", 2))
 		return (false);
 	if (line[i] && ft_strchr("10EWSN", line[i]) != NULL)
-		return (printf("Map found !\n"), true);
+	{
+		ctrl->map->map_set = true;
+		return (true);
+	}
 	return (false);
 }
 
-bool	set_config(t_ctrl *ctrl, int fd)
+int	error_config(t_ctrl *ctrl)//ameliorer?
+{
+	if (ctrl->map->colors_set + ctrl->map->textures_set < 6)
+	{
+		if (ctrl->map->map_set == true)
+			return (MISSPLACED_ELEM);
+		else if (ctrl->map->colors_set < 2)
+			return (CONFIG_MISSING);
+	}
+	else if (ctrl->map->map_set == false)
+	{
+		if (ctrl->map->colors_set + ctrl->map->textures_set < 0)
+			return (EMPTY_FILE);
+		else
+			return (MAP_MISSING);
+	}
+	return (true);
+}
+
+int	set_config(t_ctrl *ctrl, int fd)
 {
 	char	*line;
 
 	while ((line = get_next_line(fd)))
 	{
-		if ((ctrl->map->config_set == 6 && map_found(line)))
+		if ((ctrl->map->colors_set + ctrl->map->textures_set == 6
+				&& map_found(ctrl, line)))
 			break ;
 		if (ft_strcmp(line, "\n") == 0)
 		{
 			free(line);
 			continue ;
 		}
-		if (correct_texture(ctrl, line) == false)
-			return (free(line), false);
+		if (correct_texture(ctrl, line) != SUCCES)
+			return (free(line), ctrl->error);
 		free(line);
 	}
-	if (ctrl->map->config_set < 6)
-		return (ft_putstr_fd("Invalid number of config\n", 1), free(line),
-			false);
-	if (!(ctrl->map->map_stock = ft_strdup(line)))
-		return (ft_putstr_fd("malloc error\n", 1), free(line), false);
-	return (free(line), true);
+	if (line && !(ctrl->map->map_stock = ft_strdup(line)))
+		return ((ctrl->error = MALLOC), ctrl->error);
+	free(line);
+	return (SUCCES);//!!! rigueur de l'assignation de error
 }

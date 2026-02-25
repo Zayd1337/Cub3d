@@ -1,6 +1,6 @@
 #include "../../includes/cube3d.h"
 
-bool	set_texture(t_ctrl *ctrl, char **tabl)
+int	set_texture(t_ctrl *ctrl, char **tabl)
 {
 	int			i;
 	int			j;
@@ -12,30 +12,35 @@ bool	set_texture(t_ctrl *ctrl, char **tabl)
 		if (ft_strcmp(tabl[0], tex[j]))
 			continue ;
 		if (ctrl->map->textures[j] != NULL)
-			return (ft_putstr_fd(tex[j], 1),
-				ft_putstr_fd(" identifier already used\n", 1), false);
+			return ((ctrl->error = INVALID_CONFIG), ctrl->error);
 		i = 0;
 		ctrl->map->textures[j] = ft_strdup(tabl[1]);
-		ctrl->map->config_set++;
-		return (true);
+		if (!ctrl->map->textures[j])
+			return ((ctrl->error = MALLOC), ctrl->error);
+		ctrl->map->textures_set++;
+		return (SUCCES);
 	}
-	return (ft_putstr_fd(tabl[0], 1),
-		ft_putstr_fd(" is an invalid identifier\n", 1), false);
+	// if (ctrl->map->colors_set + ctrl->map->textures_set < 6)
+	// 	ctrl->error = CONFIG_MISSING;
+	// else//pas supeeeer clean
+	// 	ctrl->error = INVALID_CONFIG;
+	return ((ctrl->error = error_config(ctrl)), ctrl->error);
 }
 
 bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id)
 {
 	int	i;
 
-	i = 1;
-	while (tabl[i])
+	i = 0;
+	while (tabl[++i])
 	{
 		if (ft_atoi(tabl[i]) < 0 || ft_atoi(tabl[i]) > 255)
 			return (false);
 		ctrl->map->color[id][i - 1] = ft_atoi(tabl[i]);
-		i++;
 	}
-	ctrl->map->config_set++;
+	if (i < 4)
+		return (false);
+	ctrl->map->colors_set++;
 	return (true);
 }
 
@@ -55,11 +60,9 @@ int	set_color(t_ctrl *ctrl, char **tabl)
 	while (++i < 3)
 	{
 		if (ctrl->map->color[type][i] != -1)
-			return (ft_putstr_fd(tabl[0], 1),
-				ft_putstr_fd(" identifier already allocated\n", 1), -1);
+			return ((ctrl->error = INVALID_CONFIG), ctrl->error);
 	}
 	if (correct_RGB(ctrl, tabl, type) == false)
-		return (ft_putstr_fd(tabl[1], 1), ft_putstr_fd(" : invalid RGB\n", 1),
-			-1);
+		return ((ctrl->error = INVALID_CONFIG), ctrl->error);
 	return (1);
 }

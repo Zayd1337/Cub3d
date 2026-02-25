@@ -41,7 +41,7 @@ bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line)
 	return (true);
 }
 
-bool	fill_temp_map(t_ctrl *ctrl, int fd)
+int	fill_temp_map(t_ctrl *ctrl, int fd)
 {
 	char	*line;
 	bool	end_map;
@@ -55,18 +55,16 @@ bool	fill_temp_map(t_ctrl *ctrl, int fd)
 		else
 		{
 			if (!end_map && putlast(ctrl, &ctrl->map->temp_map, line) == false)
-				return (free(line), false);
+				return (free(line), MALLOC);
 			if (end_map && ft_strcmp(line, "\n"))
-				return (free(line),
-					ft_putstr_fd("There is something after the map\n", 1),
-					false);
+				return (free(line),	STR_AFTER);
 			ctrl->map->nb_line++;
 		}
 		free(line);
 		line = get_next_line(fd);
 	}
 	free(line);
-	return (true);
+	return (SUCCES);
 }
 
 char	*set_len(char *line, int len)
@@ -91,24 +89,24 @@ char	*set_len(char *line, int len)
 	return (toret);
 }
 
-bool	convert_in_tab(t_ctrl *ctrl)
+int	convert_in_tab(t_ctrl *ctrl)
 {
 	t_temp_map	*current;
 	int			i;
 
 	if (!ctrl->map || !ctrl->map->temp_map)
-		return (false);
+		return (MALLOC);
 	ctrl->map->map = ft_calloc((ctrl->map->nb_line + 1), sizeof(char *));
 	if (!ctrl->map->map)
-		return (false);
+		return (MALLOC);
 	current = ctrl->map->temp_map;
 	i = 0;
 	while (current)
 	{
 		ctrl->map->map[i] = set_len(current->row, ctrl->map->len_line);
 		if (!ctrl->map->map[i++])
-			return (false);
+			return (MALLOC);
 		current = current->next;
 	}
-	return (true);
+	return (SUCCES);
 }

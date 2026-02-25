@@ -30,26 +30,33 @@ void	init_textures_colors(t_map *map)
 	map->textures[3] = NULL;
 }
 
-bool	init_map(t_ctrl *ctrl, char *name)
+int	init_map(t_ctrl *ctrl, char *name)
 {
 	ctrl->map = malloc(sizeof(t_map));
 	if (!ctrl->map)
-		return (false);
+		return ((ctrl->error = MALLOC), ctrl->error);
 	if (name)
+	{
 		ctrl->map->name = ft_strdup(name);
+		if (!ctrl->map->name)
+			return ((ctrl->error = MALLOC), ctrl->error);
+	}
 	ctrl->map->temp_map = NULL;
 	ctrl->map->map_stock = NULL;
 	ctrl->map->map = NULL;
 	ctrl->map->nb_line = 0;
 	ctrl->map->len_line = 0;
-	ctrl->map->config_set = 0;
+	ctrl->map->colors_set = 0;
+    ctrl->map->textures_set = 0;
+    ctrl->map->map_set = false;
 	ctrl->map->orientation = -1;
 	init_textures_colors(ctrl->map);
-	return (true);
+	return (SUCCES);
 }
 
 void	init_struct(t_ctrl *ctrl)
 {
+    ctrl->error = SUCCES;
 	ctrl->map = NULL;
 	ctrl->win = NULL;
 	ctrl->mlx = NULL;

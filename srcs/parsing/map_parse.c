@@ -12,7 +12,7 @@ void	set_orientation(char o, t_ctrl *ctrl)
 		ctrl->map->orientation = 3;
 }
 
-bool	correct_elems(t_ctrl *ctrl, char **map)
+int	correct_elems(t_ctrl *ctrl, char **map)
 {
 	int	i;
 	int	j;
@@ -26,19 +26,18 @@ bool	correct_elems(t_ctrl *ctrl, char **map)
 		while (map[j][++i])
 		{
 			if (!ft_strchr("10 EWSN", map[j][i]))
-				return (ft_putstr_fd("Error\nInvalid char in map\n", 2), false);
+				return ((ctrl->error = INVALID_CHAR), ctrl->error);
 			if (ft_strchr("EWSN", map[j][i]))
 			{
 				if (++player > 1)
-					return (ft_putstr_fd("Error\nMultiplayer is not allowed\n",
-							1), false);
+					return ((ctrl->error = MULTIPLAYER), ctrl->error);
 				set_orientation(map[j][i], ctrl);
 			}
 		}
 	}
 	if (player == 0)
-		return (ft_putstr_fd("Error\nNo spawn point detected\n", 1), false);
-	return (true);
+		return ((ctrl->error = PLAYER_MISSING), ctrl->error);
+	return (SUCCES);
 }
 
 // closed/surrounded by walls
@@ -66,7 +65,7 @@ bool	check_walls(t_ctrl *ctrl, char **map, int i, int j)
 	return (true);
 }
 
-bool	correct_walls(t_ctrl *ctrl, char **map)
+int	correct_walls(t_ctrl *ctrl, char **map)
 {
 	int	i;
 	int	j;
@@ -79,22 +78,19 @@ bool	correct_walls(t_ctrl *ctrl, char **map)
 		{
 			if (ft_strchr("0NSEW", map[j][i]) && check_walls(ctrl, map, i,
 					j) == false)
-				return (ft_putstr_fd("Error\nMap isn't correctly enclosed\n",
-						1), false);
+				return ((ctrl->error = INVALID_WALLS), ctrl->error);
 			i++;
 		}
 		j++;
 	}
-	return (true);
+	return (SUCCES);
 }
 
-bool	parse_map(t_ctrl *ctrl)
+int	parse_map(t_ctrl *ctrl)
 {
-	if (correct_elems(ctrl, ctrl->map->map) == false)
-		return (false);
-	if (ctrl->map->orientation == -1)
-		return (ft_putstr_fd("Missing player\n", 1), false);
-	if (correct_walls(ctrl, ctrl->map->map) == false)
-		return (false);
-	return (true);
+	if (correct_elems(ctrl, ctrl->map->map) != SUCCES)
+		return (ctrl->error);
+	if (correct_walls(ctrl, ctrl->map->map) != SUCCES)
+		return (ctrl->error);
+	return (SUCCES);
 }

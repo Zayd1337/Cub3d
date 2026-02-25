@@ -23,8 +23,9 @@ bool	set_img2(t_ctrl *ctrl)
 
 bool	set_img(t_ctrl *ctrl)
 {
-	if ((ctrl->img.NO.img = mlx_xpm_file_to_image(ctrl->mlx,
-				ctrl->map->textures[0], &ctrl->img.dimension.x,
+	if ((ctrl->img.NO.img = mlx_xpm_file_to_image(ctrl->mlx, 
+				ctrl->map->textures[0], 
+				&ctrl->img.dimension.x,
 				&ctrl->img.dimension.y)) == NULL)
 		return (false);
 	if ((ctrl->img.NO.addr = mlx_get_data_addr(ctrl->img.NO.img,
