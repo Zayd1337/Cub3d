@@ -15,14 +15,16 @@ bool	init_minilibx(t_ctrl *ctrl)
 
 void	init_textures_colors(t_map *map)
 {
-	// Floor
-	map->color[0][0] = -1;
-	map->color[0][1] = -1;
-	map->color[0][2] = -1;
-	// Ceiling
-	map->color[1][0] = -1;
-	map->color[1][1] = -1;
-	map->color[1][2] = -1;
+	// // Floor
+	map->color[0] = -1;
+	map->color[1] = -1;
+	// map->color[0][0] = -1;
+	// map->color[0][1] = -1;
+	// map->color[0][2] = -1;
+	// // Ceiling
+	// map->color[1][0] = -1;
+	// map->color[1][1] = -1;
+	// map->color[1][2] = -1;
 	// Textures
 	map->textures[0] = NULL;
 	map->textures[1] = NULL;
@@ -47,8 +49,8 @@ int	init_map(t_ctrl *ctrl, char *name)
 	ctrl->map->nb_line = 0;
 	ctrl->map->len_line = 0;
 	ctrl->map->colors_set = 0;
-    ctrl->map->textures_set = 0;
-    ctrl->map->map_set = false;
+	ctrl->map->textures_set = 0;
+	ctrl->map->map_set = false;
 	ctrl->map->orientation = -1;
 	init_textures_colors(ctrl->map);
 	return (SUCCES);
@@ -56,11 +58,10 @@ int	init_map(t_ctrl *ctrl, char *name)
 
 void	init_struct(t_ctrl *ctrl)
 {
-    ctrl->error = SUCCES;
+	ctrl->error = SUCCES;
 	ctrl->map = NULL;
 	ctrl->win = NULL;
 	ctrl->mlx = NULL;
-	ctrl->size = NULL;
 	ctrl->img.NO.img = NULL;
 	ctrl->img.SO.img = NULL;
 	ctrl->img.EA.img = NULL;

@@ -1,6 +1,6 @@
 #include "../../includes/cube3d.h"
 
-void	set_orientation(char o, t_ctrl *ctrl)
+void	set_player(char o, t_ctrl *ctrl, int i, int j)
 {
 	if (o == 'N')
 		ctrl->map->orientation = 0;
@@ -10,6 +10,8 @@ void	set_orientation(char o, t_ctrl *ctrl)
 		ctrl->map->orientation = 2;
 	if (o == 'W')
 		ctrl->map->orientation = 3;
+	ctrl->player.x = (float)i;
+	ctrl->player.y = (float)j;
 }
 
 int	correct_elems(t_ctrl *ctrl, char **map)
@@ -31,7 +33,7 @@ int	correct_elems(t_ctrl *ctrl, char **map)
 			{
 				if (++player > 1)
 					return ((ctrl->error = MULTIPLAYER), ctrl->error);
-				set_orientation(map[j][i], ctrl);
+				set_player(map[j][i], ctrl, i, j);
 			}
 		}
 	}
