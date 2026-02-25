@@ -21,6 +21,32 @@
 # define WIN_WIDTH 1280 
 # define WIN_HEIGHT 720
 
+typedef enum e_error
+{
+	SUCCES = 0,
+	MALLOC = -2,
+	INVALID_INPUT = 1,//debut seulement
+
+	INVALID_FILE = -1,//obligatoirement -1 
+
+	//config
+	EMPTY_FILE = 2,
+	INVALID_CONFIG = 12,//!!! ni 1 ni 0
+	CONFIG_MISSING = 3,
+	MAP_MISSING = 4,
+	MISSPLACED_ELEM = 5,
+	
+	//parsemap
+	INVALID_CHAR = 6,
+	MULTIPLAYER = 7,
+	PLAYER_MISSING = 8,
+	INVALID_WALLS = 11,
+	STR_AFTER = 9,
+
+	//mlx
+	INVALID_FILE_FORMAT = 10
+}t_error;
+
 typedef struct s_xy
 {
 	int x;
@@ -40,7 +66,10 @@ typedef struct s_map//parsing surtout
 	t_temp_map *temp_map;//ok
 	char *map_stock;//used
 	char **map;
-	int	config_set;//<6 = pas fini d'allouer
+
+	int textures_set;//<4 = pas fini d'allouer
+	int	colors_set;//<2 = pas fini d'allouer
+	bool map_set;//== 0 = pas fini d'allouer
 
 	char *textures[4];//N, S, E, W
 	int color[2][3];//F, C
@@ -75,6 +104,8 @@ typedef struct s_ctrl
 	t_map 			*map;
 	t_xy			*size;
 	t_images		img;
+	t_error			error;
+
 	
 } t_ctrl ;
 
@@ -90,25 +121,26 @@ bool	set_img(t_ctrl *ctrl);
 bool    init_minilibx(t_ctrl *ctrl);
 void init_textures_colors(t_map *map);
 void	init_struct(t_ctrl *ctrl);
-bool    init_map(t_ctrl *ctrl, char *name);
+int    init_map(t_ctrl *ctrl, char *name);
 /*map_parse*/
-bool	parse_map(t_ctrl *ctrl);
+int	parse_map(t_ctrl *ctrl);
 /*parsing*/
+void	print_error(t_ctrl *ctrl);
 int	check_file(char *name);
-bool	check_mapname(char *file_name);
-bool	parse_data(t_ctrl *ctrl, int argc, char **argv);
+int	check_mapname(char *file_name);
+int	parse_data(t_ctrl *ctrl, int argc, char **argv);
 /*pre_map*/
-bool	correct_texture(t_ctrl *ctrl, char *line);
-bool	set_config(t_ctrl *ctrl, int fd);
+bool	map_found(t_ctrl *ctrl, char *line);
+int	correct_texture(t_ctrl *ctrl, char *line);
+int	set_config(t_ctrl *ctrl, int fd);
+int	error_config(t_ctrl *ctrl);
 /*temp_map_tools*/
-bool	fill_temp_map(t_ctrl *ctrl, int fd);
-bool	convert_in_tab(t_ctrl *ctrl);
+int	fill_temp_map(t_ctrl *ctrl, int fd);
+int	convert_in_tab(t_ctrl *ctrl);
 t_temp_map	*add_node(char *line);
 bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line);
-void	free_list(t_temp_map **head);
-int	chainlist_size(t_temp_map **head);
 /*texture_color*/
-bool set_texture(t_ctrl *ctrl, char **tabl);
+int set_texture(t_ctrl *ctrl, char **tabl);
 bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id);
 int	set_color(t_ctrl *ctrl, char **tabl);
 

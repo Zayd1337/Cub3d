@@ -37,6 +37,8 @@ void	free_map(t_map *map)
 
 	if (map->name)
 		free(map->name);
+	// if (map->map_stock)
+	// 	free(map->map_stock);
 	if (map->map)
 		free_tab(map->map);
 	if (map->temp_map)

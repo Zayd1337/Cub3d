@@ -1,4 +1,4 @@
-#include "../includes/cube3d.h"
+#include "../../includes/cube3d.h"
 
 void	print_chain(t_temp_map **head)
 {
@@ -31,7 +31,9 @@ void	print_map_infos(t_ctrl *ctrl)
 	printf("F : [%d][%d][%d]\n", ctrl->map->color[1][0], ctrl->map->color[1][1],
 		ctrl->map->color[1][2]);
 
-	printf("config_set : %d\n", ctrl->map->config_set);
+	printf("config_set : %d\n", ctrl->map->textures_set);
+	printf("config_set : %d\n", ctrl->map->colors_set);
+	printf("config_set : %d\n", ctrl->map->map_set);
 	printf("nb_line : %zu\n", ctrl->map->nb_line);
 	printf("len_lime : %zu\n", ctrl->map->len_line);
 
