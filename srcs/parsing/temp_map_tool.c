@@ -51,13 +51,13 @@ int	fill_temp_map(t_ctrl *ctrl, int fd)
 	line = ctrl->map->map_stock;
 	while (line != NULL)
 	{
-		if ((temp = line), !(line = remove_chars(temp, "\n")))
-			return (free(temp), MALLOC);
-		free(temp);
 		if (end_map == false && !ft_strcmp(line, "\n"))
 			end_map = true;
 		else
 		{
+			if ((temp = line), !(line = remove_chars(temp, "\n")))
+				return (free(temp), MALLOC);
+			free(temp);
 			if (!end_map && putlast(ctrl, &ctrl->map->temp_map, line) == false)
 				return (free(line), MALLOC);
 			if (end_map && ft_strcmp(line, "\n"))

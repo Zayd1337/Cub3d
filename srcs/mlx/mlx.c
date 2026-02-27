@@ -151,12 +151,7 @@ int move(t_ctrl *ctrl)
     double move_x = 0;
     double move_y = 0;
 	t_coor next;
-	
-	int i = 0;
-	printf ("keypress : ");
-	while (ctrl->key_press[i])
-		printf ("[%d]", ctrl->key_press[i++]);
-	printf ("\n");
+
     if (ctrl->key_press[0]) 
 		move_y -= SPEED; // W
     if (ctrl->key_press[2]) 

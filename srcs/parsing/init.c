@@ -94,4 +94,7 @@ void	init_struct(t_ctrl *ctrl)
 	ctrl->img.SO.img = NULL;
 	ctrl->img.EA.img = NULL;
 	ctrl->img.WE.img = NULL;
+	ctrl->img.F_C.img = NULL;
+	ctrl->img.minimap.img = NULL;
+	ctrl->img.to_print.img = NULL;
 }
