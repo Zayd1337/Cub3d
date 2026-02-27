@@ -38,17 +38,8 @@ int	init_minilibx(t_ctrl *ctrl)
 
 void	init_textures_colors(t_map *map)
 {
-	// // Floor
 	map->color[0] = -1;
 	map->color[1] = -1;
-	// map->color[0][0] = -1;
-	// map->color[0][1] = -1;
-	// map->color[0][2] = -1;
-	// // Ceiling
-	// map->color[1][0] = -1;
-	// map->color[1][1] = -1;
-	// map->color[1][2] = -1;
-	// Textures
 	map->textures[0] = NULL;
 	map->textures[1] = NULL;
 	map->textures[2] = NULL;

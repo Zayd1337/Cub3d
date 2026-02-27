@@ -14,7 +14,6 @@ int	check_mapname(char *file_name)
 	return (INVALID_FILE);
 }
 
-// c les maillons les plus loins du main qui maj ctrl->error
 int	set_map(t_ctrl *ctrl, int fd)
 {
 	if ((ctrl->error = fill_temp_map(ctrl, fd)) != SUCCES)
@@ -23,25 +22,6 @@ int	set_map(t_ctrl *ctrl, int fd)
 		return (ctrl->error);
 	return (SUCCES);
 }
-
-// bool	is_valid_file(char *path)
-// {
-// 	int	fd;
-
-// 	if (!path || ft_strlen(path) < 5 ||
-// 		 ft_strncmp(path + ft_strlen(path) - 4, ".xpm", 4) != 0)
-// 		return (false);
-// 	fd = open(path, O_RDONLY);
-// 	if (fd < 0)
-// 		return (false);
-// 	if (read(fd, NULL, 0) < 0)
-// 	{
-// 		close(fd);
-// 		return (false);
-// 	}
-// 	close(fd);
-// 	return (true);
-// }
 
 int	check_file(char *name)
 {

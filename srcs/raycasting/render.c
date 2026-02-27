@@ -39,7 +39,6 @@ int	prepare_minimap(t_ctrl *ctrl)
 		p.x = 0;
 		while (p.x < (int)ctrl->map->len_line)
 		{
-			// printf("pixel[%d][%d]\n", p.y, p.x);
 			if (ctrl->map->map[p.y][p.x] != ' ')
 				fill_square(&ctrl->img.minimap, \
 					give_color(ctrl->map->map[p.y][p.x]), ctrl->tile_size, p);
@@ -47,19 +46,58 @@ int	prepare_minimap(t_ctrl *ctrl)
 		}
 		p.y++;
 	}
-	//!securite a ajouter!
-	// mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.minimap.img, 0, 0);
 	return (SUCCES);
+}
+
+// int	prepare_background(t_ctrl *ctrl)
+// {
+// 	t_xy ind;
+// 	int color;
+
+// 	ind.y = 0;
+// 	while (ind.y < ctrl->img.F_C.img_dim.y)
+// 	{
+// 		ind.x = 0;
+// 		while (ind.x < ctrl->img.F_C.img_dim.x)
+// 		{
+// 			color = ctrl->map->color[0];
+// 			if (ind.y < ctrl->img.F_C.img_dim.y/2)
+// 				color = ctrl->map->color[1];
+// 			my_mlx_pixel_put(&ctrl->img.F_C, ind, ctrl->img.F_C.img_dim, color);
+// 			ind.x++;
+// 		}
+// 		ind.y++;
+// 	}
+// 	return (SUCCES);
+// }
+
+int prepare_background(t_ctrl *ctrl)
+{
+    t_xy ind;
+    int sky_color = ctrl->map->color[1];
+    int floor_color = ctrl->map->color[0];
+
+    ind.y = 0;
+    while (ind.y < ctrl->img.F_C.img_dim.y)
+    {
+        ind.x = 0;
+        int current_color = (ind.y < ctrl->img.F_C.img_dim.y / 2) ? sky_color : floor_color;
+        while (ind.x < ctrl->img.F_C.img_dim.x)
+        {
+            my_mlx_pixel_put(&ctrl->img.F_C, ind, ctrl->img.F_C.img_dim, current_color);
+            ind.x++;
+        }
+        ind.y++;
+    }
+    return (SUCCES);
 }
 
 int	prepare_static(t_ctrl *ctrl)
 {
-	//init des truc qui ne seront pas modifies, juste copies a la rigueur
-
-	// if (prepare_floor_ceiling(&ctrl) != SUCCES)
-	// 	return (print_error(&ctrl), free_all(&ctrl), 1);
+	if (prepare_background(ctrl) != SUCCES)
+		return ((ctrl->error = MALLOC), ctrl->error);
 	if (prepare_minimap(ctrl) != SUCCES)
-		return (print_error(ctrl), free_all(ctrl), 1);
+		return ((ctrl->error = MALLOC), ctrl->error);
 	return (SUCCES);
 }
 
@@ -75,7 +113,24 @@ int	add_player(t_ctrl *ctrl, t_data *img)
 	return (SUCCES);
 }
 
+
 int render(t_ctrl *ctrl)
+{
+    int y;
+
+    y = 0;
+    while (y < WIN_HEIGHT)
+    {
+        ft_memcpy(ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len), 
+            ctrl->img.F_C.addr + (y * ctrl->img.F_C.x_len), 
+            ctrl->img.F_C.x_len);
+        y++;
+    }
+    mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.to_print.img, 0, 0);
+    return (SUCCES);
+}
+
+int minimap_render(t_ctrl *ctrl)
 {
     int y;
 

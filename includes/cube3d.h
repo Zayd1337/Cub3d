@@ -53,6 +53,7 @@ typedef struct s_xy
 {
 	int x;
 	int y;
+	int z;
 } t_xy;
 
 typedef struct s_coor//pour le player et les rayons
@@ -89,7 +90,7 @@ typedef struct s_map
 
 typedef struct s_data//mlx img
 {
-	t_xy			img_dim;//en unite de map
+	t_xy			img_dim;//en pixel
 	void			*img;
 	char			*addr;
 	int				bpp;
@@ -172,7 +173,7 @@ bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id);
 int	set_color(t_ctrl *ctrl, char **tabl);
 
 /*----------------RAYCASTING----------------*/
-void	my_mlx_pixel_put(t_data *data, t_xy p, t_xy win_s, int color);
+int	my_mlx_pixel_put(t_data *data, t_xy p, t_xy win_s, int color);
 int	convert_rgb(int r, int g, int b);
 /*render*/
 int	prepare_minimap(t_ctrl *ctrl);
