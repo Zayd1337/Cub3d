@@ -1,4 +1,4 @@
-// #include "../../includes/cube3d.h"
+#include "../../includes/cube3d.h"
 
 // // int fill_img_FC(t_ctrl *ctrl)
 // // {
@@ -21,14 +21,4 @@
 // 	print_2D_map(ctrl);
 // }
 
-// //donne la couleur color au pixel (x,y)
-// void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-// {
-// 	char	*dst;
-
-// 	//On decale au pixel (x,y)
-// 	dst = data->addr + (y * data->x_len + x * (data->bpp / 8));
-// 	//on colore le pixel trouve 
-// 	*(unsigned int*)dst = color;
-// }
 

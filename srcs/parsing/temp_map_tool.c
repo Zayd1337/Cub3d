@@ -45,11 +45,15 @@ int	fill_temp_map(t_ctrl *ctrl, int fd)
 {
 	char	*line;
 	bool	end_map;
+	char *temp;
 
 	end_map = false;
 	line = ctrl->map->map_stock;
 	while (line != NULL)
 	{
+		if ((temp = line), !(line = remove_chars(temp, "\n")))
+			return (free(temp), MALLOC);
+		free(temp);
 		if (end_map == false && !ft_strcmp(line, "\n"))
 			end_map = true;
 		else

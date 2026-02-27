@@ -62,6 +62,14 @@ void	clean_img(t_ctrl *ctrl)
 		mlx_destroy_image(ctrl->mlx, ctrl->img.EA.img);
 	if (ctrl->img.WE.img)
 		mlx_destroy_image(ctrl->mlx, ctrl->img.WE.img);
+	if (ctrl->img.F_C.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.F_C.img);
+	if (ctrl->img.minimap.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.minimap.img);
+	// if (ctrl->img.player.img)
+	// 	mlx_destroy_image(ctrl->mlx, ctrl->img.player.img);
+	if (ctrl->img.to_print.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.to_print.img);
 }
 
 void	free_all(t_ctrl *ctrl)
