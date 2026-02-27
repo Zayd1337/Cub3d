@@ -1,14 +1,14 @@
 #include "../../includes/cube3d.h"
 
-bool	set_tile_size(t_ctrl *ctrl)
+bool	set_tile_size(t_ctrl *ctrl)//ici on choisi la taille des unites de la minimap
 {
 	t_xy screen_size;
 
 	if (ctrl->map->len_line == 0 || ctrl->map->nb_line == 0)
     	return (false);
 	// mlx_get_screen_size(ctrl->mlx, &screen_size.x, &screen_size.y);
-	screen_size.x = WIN_WIDTH / ctrl->map->len_line;
-	screen_size.y = WIN_HEIGHT / ctrl->map->nb_line;
+	screen_size.x = WIN_WIDTH/4 / ctrl->map->len_line;
+	screen_size.y = WIN_HEIGHT/4 / ctrl->map->nb_line;
 
 	ctrl->tile_size = screen_size.x;
 	if (screen_size.y < screen_size.x)
@@ -26,13 +26,16 @@ int	init_minilibx(t_ctrl *ctrl)
 	set_tile_size(ctrl);
 	//1ere position du player
 	ctrl->player.precis.x = ctrl->player.map_c.x*ctrl->tile_size + ctrl->tile_size/2;
-	ctrl->player.precis.y = ctrl->player.map_c.y*ctrl->tile_size + ctrl->tile_size/2;
+	ctrl->player.precis.y = ctrl->player.map_c.y*ctrl->tile_size + ctrl->tile_size/2;//le 20 c l'offset...
 	printf ("map[%d][%d], pix_coor : [%f][%f]\n", ctrl->player.map_c.y, ctrl->player.map_c.x, ctrl->player.precis.y, ctrl->player.precis.x);
 	ctrl->win = mlx_new_window(ctrl->mlx, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
 	if (!ctrl->win)
 		return ((ctrl->error = MALLOC), ctrl->error);
+	// ctrl->minimap_size.x = ctrl->map->len_line*ctrl->tile_size;
 	if (set_img(ctrl) == false)
 		return ((ctrl->error = MALLOC), ctrl->error);
+	ctrl->p_minimap.x = WIN_WIDTH - 20 - ctrl->img.minimap.img_dim.x;
+	ctrl->p_minimap.y = 20;
 	return (SUCCES);
 }
 

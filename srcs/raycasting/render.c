@@ -21,9 +21,7 @@ void	fill_square(t_data *img, int color, int size, t_xy start)
 
 int	give_color(char type)
 {
-	if (type == ' ')
-		return (-1);
-	if (type == '1')
+	if (type == '1' || type == ' ')
 		return (0x4A489D);
 	else
 		return (0x21BB83);
@@ -39,37 +37,14 @@ int	prepare_minimap(t_ctrl *ctrl)
 		p.x = 0;
 		while (p.x < (int)ctrl->map->len_line)
 		{
-			if (ctrl->map->map[p.y][p.x] != ' ')
-				fill_square(&ctrl->img.minimap, \
-					give_color(ctrl->map->map[p.y][p.x]), ctrl->tile_size, p);
+			fill_square(&ctrl->img.minimap, \
+				give_color(ctrl->map->map[p.y][p.x]), ctrl->tile_size, p);
 			p.x++;
 		}
 		p.y++;
 	}
 	return (SUCCES);
 }
-
-// int	prepare_background(t_ctrl *ctrl)
-// {
-// 	t_xy ind;
-// 	int color;
-
-// 	ind.y = 0;
-// 	while (ind.y < ctrl->img.F_C.img_dim.y)
-// 	{
-// 		ind.x = 0;
-// 		while (ind.x < ctrl->img.F_C.img_dim.x)
-// 		{
-// 			color = ctrl->map->color[0];
-// 			if (ind.y < ctrl->img.F_C.img_dim.y/2)
-// 				color = ctrl->map->color[1];
-// 			my_mlx_pixel_put(&ctrl->img.F_C, ind, ctrl->img.F_C.img_dim, color);
-// 			ind.x++;
-// 		}
-// 		ind.y++;
-// 	}
-// 	return (SUCCES);
-// }
 
 int prepare_background(t_ctrl *ctrl)
 {
@@ -105,15 +80,32 @@ int	add_player(t_ctrl *ctrl, t_data *img)
 {
 	t_xy c;
 
-	c.x = (int)ctrl->player.precis.x;
-	c.y = (int)ctrl->player.precis.y;
+	c.x = ctrl->p_minimap.x + (int)ctrl->player.precis.x;
+	c.y = ctrl->p_minimap.y + (int)ctrl->player.precis.y;
 	if (!img)
 		return (MALLOC);
+	//pixels tt autours trop moche mdr
+	my_mlx_pixel_put(img, c, ctrl->img.to_print.img_dim, 0xE32925);
+	c.x++;
+	my_mlx_pixel_put(img, c, ctrl->img.to_print.img_dim, 0xE32925);
+	c.y--;
+	my_mlx_pixel_put(img, c, ctrl->img.to_print.img_dim, 0xE32925);
+	c.x--;
+	my_mlx_pixel_put(img, c, ctrl->img.to_print.img_dim, 0xE32925);
+	c.x--;
+	my_mlx_pixel_put(img, c, ctrl->img.to_print.img_dim, 0xE32925);
+	c.y++;
+	my_mlx_pixel_put(img, c, ctrl->img.to_print.img_dim, 0xE32925);
+	c.y++;
+	my_mlx_pixel_put(img, c, ctrl->img.to_print.img_dim, 0xE32925);
+	c.x++;
+	my_mlx_pixel_put(img, c, ctrl->img.to_print.img_dim, 0xE32925);
+	c.x++;
 	my_mlx_pixel_put(img, c, ctrl->img.to_print.img_dim, 0xE32925);
 	return (SUCCES);
 }
 
-
+//diviser 1 map 1 central
 int render(t_ctrl *ctrl)
 {
     int y;
@@ -124,26 +116,34 @@ int render(t_ctrl *ctrl)
         ft_memcpy(ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len), 
             ctrl->img.F_C.addr + (y * ctrl->img.F_C.x_len), 
             ctrl->img.F_C.x_len);
+		if (y >= ctrl->p_minimap.y && y < ctrl->p_minimap.y + ctrl->img.minimap.img_dim.y)
+        {
+            int m_y = y - ctrl->p_minimap.y;
+            char *dst = ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len) + (ctrl->p_minimap.x * 4);
+            char *src = ctrl->img.minimap.addr + (m_y * ctrl->img.minimap.x_len);
+            ft_memcpy(dst, src, ctrl->img.minimap.x_len);
+        }
         y++;
     }
+	add_player(ctrl, &ctrl->img.to_print);
     mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.to_print.img, 0, 0);
     return (SUCCES);
 }
 
-int minimap_render(t_ctrl *ctrl)
-{
-    int y;
+// int minimap_render(t_ctrl *ctrl)
+// {
+//     int y;
 
-    y = 0;
-    while (y < (int)(ctrl->map->nb_line * ctrl->tile_size))
-    {
-        ft_memcpy(ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len), 
-            ctrl->img.minimap.addr + (y * ctrl->img.minimap.x_len), 
-            ctrl->img.minimap.x_len);
-        y++;
-    }
-    add_player(ctrl, &ctrl->img.to_print);
-    mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.to_print.img, 0, 0);
-    return (SUCCES);
-}
+//     y = 0;
+//     while (y < (int)(ctrl->map->nb_line * ctrl->tile_size))
+//     {
+//         ft_memcpy(ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len), 
+//             ctrl->img.minimap.addr + (y * ctrl->img.minimap.x_len), 
+//             ctrl->img.minimap.x_len);
+//         y++;
+//     }
+//     add_player(ctrl, &ctrl->img.to_print);
+//     mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.to_print.img, 0, 0);
+//     return (SUCCES);
+// }
 

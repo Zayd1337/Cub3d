@@ -106,9 +106,9 @@ typedef struct s_images
 	t_data	EA;
 	t_data	WE;
 	t_data	F_C;
-	t_data	minimap;
-	//je sais pas encore quoi faire de dimension...
-	t_xy	dimension;//toutes les images doivent avoir la mm
+	t_xy	dimension;//dimension des textures?
+
+	t_data	minimap;//taille differente des autres
 	
 	//dynamique
 	t_data	to_print;
@@ -118,7 +118,7 @@ typedef struct s_images
 typedef struct s_player
 {
 	t_xy	map_c;//coordonnees dans les unites de la map
-	t_coor	precis;//coordonnees en pixels
+	t_coor	precis;//coordonnees en pixels dans les unites de la map
 }t_player ;
 
 typedef struct s_ctrl
@@ -130,9 +130,8 @@ typedef struct s_ctrl
 	int				tile_size;//en pixels
 	t_player		player;
 	bool			key_press[6];//wasd<-->
-	// int			moving;
-	
 	t_error			error;
+	t_xy			p_minimap;
 } t_ctrl ;
 
 
