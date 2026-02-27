@@ -26,7 +26,7 @@ int	init_minilibx(t_ctrl *ctrl)
 	set_tile_size(ctrl);
 	//1ere position du player
 	ctrl->player.precis.x = ctrl->player.map_c.x*ctrl->tile_size + ctrl->tile_size/2;
-	ctrl->player.precis.y = ctrl->player.map_c.y*ctrl->tile_size + ctrl->tile_size/2;
+	ctrl->player.precis.y = ctrl->player.map_c.y*ctrl->tile_size + ctrl->tile_size/2;//le 20 c l'offset...
 	printf ("map[%d][%d], pix_coor : [%f][%f]\n", ctrl->player.map_c.y, ctrl->player.map_c.x, ctrl->player.precis.y, ctrl->player.precis.x);
 	ctrl->win = mlx_new_window(ctrl->mlx, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
 	if (!ctrl->win)
@@ -34,6 +34,8 @@ int	init_minilibx(t_ctrl *ctrl)
 	// ctrl->minimap_size.x = ctrl->map->len_line*ctrl->tile_size;
 	if (set_img(ctrl) == false)
 		return ((ctrl->error = MALLOC), ctrl->error);
+	ctrl->p_minimap.x = WIN_WIDTH - 20 - ctrl->img.minimap.img_dim.x;
+	ctrl->p_minimap.y = 20;
 	return (SUCCES);
 }
 

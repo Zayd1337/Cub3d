@@ -21,7 +21,7 @@
 # define WIN_WIDTH 1280 
 # define WIN_HEIGHT 720
 
-#define	SPEED 0.1 //la vitesse du joueur
+#define	SPEED 1 //la vitesse du joueur
 
 typedef enum e_error
 {
@@ -118,7 +118,7 @@ typedef struct s_images
 typedef struct s_player
 {
 	t_xy	map_c;//coordonnees dans les unites de la map
-	t_coor	precis;//coordonnees en pixels
+	t_coor	precis;//coordonnees en pixels dans les unites de la map
 }t_player ;
 
 typedef struct s_ctrl
@@ -131,7 +131,7 @@ typedef struct s_ctrl
 	t_player		player;
 	bool			key_press[6];//wasd<-->
 	t_error			error;
-	t_xy			minimap_size;
+	t_xy			p_minimap;
 } t_ctrl ;
 
 
