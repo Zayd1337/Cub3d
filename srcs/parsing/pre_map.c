@@ -41,15 +41,13 @@ int	error_config(t_ctrl *ctrl) // ameliorer?
 	{
 		if (ctrl->map->map_set == true)
 			return (MISSPLACED_ELEM);
-		else if (ctrl->map->colors_set < 2)
-			return (CONFIG_MISSING);
+		return (CONFIG_MISSING);
 	}
 	else if (ctrl->map->map_set == false)
 	{
-		if (ctrl->map->colors_set + ctrl->map->textures_set < 0)
+		if (ctrl->map->colors_set + ctrl->map->textures_set == 0)
 			return (EMPTY_FILE);
-		else
-			return (MAP_MISSING);
+		return (MAP_MISSING);
 	}
 	return (true);
 }
@@ -60,8 +58,7 @@ int	set_config(t_ctrl *ctrl, int fd)
 
 	while ((line = get_next_line(fd)))
 	{
-		if ((ctrl->map->colors_set + ctrl->map->textures_set == 6
-				&& map_found(ctrl, line)))
+		if ((map_found(ctrl, line) && ctrl->map->colors_set + ctrl->map->textures_set == 6))
 			break ;
 		if (ft_strcmp(line, "\n") == 0)
 		{

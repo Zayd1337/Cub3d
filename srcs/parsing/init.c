@@ -81,12 +81,20 @@ int	init_map(t_ctrl *ctrl, char *name)
 
 void	init_struct(t_ctrl *ctrl)
 {
+	int i;
+
 	ctrl->error = SUCCES;
 	ctrl->map = NULL;
 	ctrl->win = NULL;
 	ctrl->mlx = NULL;
+	i = 0;
+	while (i < 6)
+		ctrl->key_press[i++] = false;
 	ctrl->img.NO.img = NULL;
 	ctrl->img.SO.img = NULL;
 	ctrl->img.EA.img = NULL;
 	ctrl->img.WE.img = NULL;
+	ctrl->img.F_C.img = NULL;
+	ctrl->img.minimap.img = NULL;
+	ctrl->img.to_print.img = NULL;
 }

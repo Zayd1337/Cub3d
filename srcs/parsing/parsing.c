@@ -8,10 +8,10 @@ int	check_mapname(char *file_name)
 		return (INVALID_FILE);
 	len = ft_strlen(file_name);
 	if (len < 5)
-		return (ft_putstr_fd("Error\nMap name too short\n", 2), INVALID_FILE);
+		return (INVALID_FILE);
 	if (ft_strncmp(file_name + (len - 4), ".cub", 4) == 0)
 		return (SUCCES);
-	return (ft_putstr_fd("Error\nInvalid map extension\n", 2), INVALID_FILE);
+	return (INVALID_FILE);
 }
 
 // c les maillons les plus loins du main qui maj ctrl->error
@@ -48,6 +48,8 @@ int	check_file(char *name)
 	int		fd;
 	char	c;
 
+	if (!name)
+		return(-1);
 	fd = open(name, O_RDONLY);
 	if (fd == -1)
 		return (INVALID_FILE);
@@ -118,23 +120,23 @@ int	parse_data(t_ctrl *ctrl, int argc, char **argv)
 	int	fd;
 
 	if (argc != 2)
-		return (printf("nb args\n"), (ctrl->error = INVALID_INPUT),
+		return ((ctrl->error = INVALID_INPUT),
 			ctrl->error);
 	if (check_mapname(argv[1]) != SUCCES)
-		return (printf("map name\n"), ctrl->error);
+		return ((ctrl->error = INVALID_FILE), ctrl->error);
 	if ((fd = check_file(argv[1])) == INVALID_FILE)
-		return (printf("bad file\n"), (ctrl->error = INVALID_FILE),
+		return ((ctrl->error = INVALID_FILE),
 			ctrl->error);
 	if (init_map(ctrl, argv[1]) != SUCCES)
-		return (printf("init map\n"), close(fd), ctrl->error);
+		return (close(fd), ctrl->error);
 	if (set_config(ctrl, fd) != SUCCES)
-		return (printf("set_config\n"), close(fd), ctrl->error);
+		return (close(fd), ctrl->error);
 	if (texture_file_exist(ctrl) != SUCCES)
-		return (printf("texture file\n"), close(fd), ctrl->error);
+		return (close(fd), ctrl->error);
 	if (set_map(ctrl, fd) != SUCCES)
-		return (printf("set map\n"), close(fd), ctrl->error);
+		return (close(fd), ctrl->error);
 	if (parse_map(ctrl) != SUCCES)
-		return (printf("parse\n"), close(fd), ctrl->error);
+		return (close(fd), ctrl->error);
 	print_map_infos(ctrl);
-	return (printf("succes\n"), close(fd), SUCCES);
+	return (close(fd), SUCCES);
 }

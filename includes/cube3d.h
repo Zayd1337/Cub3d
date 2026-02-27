@@ -21,6 +21,8 @@
 # define WIN_WIDTH 1280 
 # define WIN_HEIGHT 720
 
+#define	SPEED 1 //la vitesse du joueur
+
 typedef enum e_error
 {
 	SUCCES = 0,
@@ -126,6 +128,8 @@ typedef struct s_ctrl
 	t_images		img;
 	int				tile_size;//en pixels
 	t_player		player;
+	bool			key_press[6];//wasd<-->
+	// int			moving;
 	
 	t_error			error;
 } t_ctrl ;
@@ -135,6 +139,8 @@ typedef struct s_ctrl
 /*mlx*/
 int	end(t_ctrl *ctrl);
 int	keypress(int keysym, t_ctrl *ctrl);
+int	keyrelease(int keysym, t_ctrl *ctrl);
+int	move(t_ctrl *ctrl);
 bool	set_img(t_ctrl *ctrl);
 
 /*----------------PARSING----------------*/
