@@ -39,7 +39,8 @@ PARSING_FILES	=	init.c\
 					pre_map.c\
 					temp_map_tool.c\
 					texture_color.c 
-RAYCASTING_FILES = 	
+RAYCASTING_FILES = 	raycasting.c\
+					render.c
 UTILS_FILES		=	debug.c\
 					ft_free.c\
 					ft_strcmp.c\

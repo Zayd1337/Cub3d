@@ -1,16 +1,39 @@
 #include "../../includes/cube3d.h"
 
-bool	init_minilibx(t_ctrl *ctrl)
+bool	set_tile_size(t_ctrl *ctrl)
+{
+	t_xy screen_size;
+
+	if (ctrl->map->len_line == 0 || ctrl->map->nb_line == 0)
+    	return (false);
+	// mlx_get_screen_size(ctrl->mlx, &screen_size.x, &screen_size.y);
+	screen_size.x = WIN_WIDTH / ctrl->map->len_line;
+	screen_size.y = WIN_HEIGHT / ctrl->map->nb_line;
+
+	ctrl->tile_size = screen_size.x;
+	if (screen_size.y < screen_size.x)
+		ctrl->tile_size = screen_size.y;
+	printf ("tile size : %d x %d\n", ctrl->tile_size, ctrl->tile_size);
+	printf ("So the map size is %lu x %lu pixels\n", ctrl->map->len_line*ctrl->tile_size, ctrl->map->nb_line*ctrl->tile_size);
+	return (true);
+}
+
+int	init_minilibx(t_ctrl *ctrl)
 {
 	ctrl->mlx = mlx_init();
 	if (!ctrl->mlx)
-		return (printf("error malloc init 1\n"), false);
+		return ((ctrl->error = MALLOC), ctrl->error);
+	set_tile_size(ctrl);
+	//1ere position du player
+	ctrl->player.precis.x = ctrl->player.map_c.x*ctrl->tile_size + ctrl->tile_size/2;
+	ctrl->player.precis.y = ctrl->player.map_c.y*ctrl->tile_size + ctrl->tile_size/2;
+	printf ("map[%d][%d], pix_coor : [%f][%f]\n", ctrl->player.map_c.y, ctrl->player.map_c.x, ctrl->player.precis.y, ctrl->player.precis.x);
 	ctrl->win = mlx_new_window(ctrl->mlx, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
 	if (!ctrl->win)
-		return (printf("error malloc init 2\n"), false);
+		return ((ctrl->error = MALLOC), ctrl->error);
 	if (set_img(ctrl) == false)
-		return (printf("Invalid file detected\n"), false);
-	return (true);
+		return ((ctrl->error = MALLOC), ctrl->error);
+	return (SUCCES);
 }
 
 void	init_textures_colors(t_map *map)

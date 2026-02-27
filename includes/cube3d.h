@@ -53,34 +53,41 @@ typedef struct s_xy
 	int y;
 } t_xy;
 
+typedef struct s_coor//pour le player et les rayons
+{
+	double x;
+	double y;
+} t_coor;
+
 typedef struct s_temp_map//parsing only
 {
 	char *row;
 	struct s_temp_map *next;
 } t_temp_map;
 
-typedef struct s_map//parsing surtout
+typedef struct s_map
 {
+	//infos utiles
 	char *name;
 
-	t_temp_map *temp_map;//ok
-	char *map_stock;//used
 	char **map;
-
-	int textures_set;//<4 = pas fini d'allouer
-	int	colors_set;//<2 = pas fini d'allouer
-	bool map_set;//== 0 = pas fini d'allouer
-
 	char *textures[4];//N, S, E, W
 	int color[2];//F, C
-
 	size_t nb_line;
 	size_t	len_line;
 	int	orientation;//NO=0 SO=1 EA=2 WE=3
+
+	//parsing
+	int textures_set;//<4 = pas fini d'allouer
+	int	colors_set;//<2 = pas fini d'allouer
+	bool map_set;//== 0 = pas fini d'allouer
+	t_temp_map *temp_map;//ok
+	char *map_stock;//used
 } t_map;
 
 typedef struct s_data//mlx img
 {
+	t_xy			img_dim;//en unite de map
 	void			*img;
 	char			*addr;
 	int				bpp;
@@ -90,12 +97,26 @@ typedef struct s_data//mlx img
 
 typedef struct s_images
 {
+	//static
 	t_data	NO;
 	t_data	SO;
 	t_data	EA;
 	t_data	WE;
-	t_xy	dimension;
+	t_data	F_C;
+	t_data	minimap;
+	//je sais pas encore quoi faire de dimension...
+	t_xy	dimension;//toutes les images doivent avoir la mm
+	
+	//dynamique
+	t_data	to_print;
+	
 } t_images;
+
+typedef struct s_player
+{
+	t_xy	map_c;//coordonnees dans les unites de la map
+	t_coor	precis;//coordonnees en pixels
+}t_player ;
 
 typedef struct s_ctrl
 {
@@ -103,7 +124,8 @@ typedef struct s_ctrl
 	void			*win;
 	t_map 			*map; 
 	t_images		img;
-	t_xy			player;
+	int				tile_size;//en pixels
+	t_player		player;
 	
 	t_error			error;
 } t_ctrl ;
@@ -117,7 +139,7 @@ bool	set_img(t_ctrl *ctrl);
 
 /*----------------PARSING----------------*/
 /*init*/
-bool    init_minilibx(t_ctrl *ctrl);
+int    init_minilibx(t_ctrl *ctrl);
 void init_textures_colors(t_map *map);
 void	init_struct(t_ctrl *ctrl);
 int    init_map(t_ctrl *ctrl, char *name);
@@ -144,8 +166,12 @@ bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id);
 int	set_color(t_ctrl *ctrl, char **tabl);
 
 /*----------------RAYCASTING----------------*/
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	my_mlx_pixel_put(t_data *data, t_xy p, t_xy win_s, int color);
 int	convert_rgb(int r, int g, int b);
+/*render*/
+int	prepare_minimap(t_ctrl *ctrl);
+int	prepare_static(t_ctrl *ctrl);
+int	render(t_ctrl *ctrl);
 
 /*-------------UTILS----------------*/
 void	free_tab(char **tab);

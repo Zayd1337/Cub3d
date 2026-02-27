@@ -10,8 +10,8 @@ void	set_player(char o, t_ctrl *ctrl, int i, int j)
 		ctrl->map->orientation = 2;
 	if (o == 'W')
 		ctrl->map->orientation = 3;
-	ctrl->player.x = (float)i;
-	ctrl->player.y = (float)j;
+	ctrl->player.map_c.x = i;
+	ctrl->player.map_c.y = j;
 }
 
 int	correct_elems(t_ctrl *ctrl, char **map)
