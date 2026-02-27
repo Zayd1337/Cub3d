@@ -32,7 +32,9 @@ int	give_color(char type)
 int	prepare_minimap(t_ctrl *ctrl)
 {
 	t_xy	p;
+	// t_xy	offset;
 
+	// offset.x = ctrl->img.minimap.x_len - ;
 	p.y = 0;
 	while (p.y < (int)ctrl->map->nb_line)
 	{
@@ -113,37 +115,47 @@ int	add_player(t_ctrl *ctrl, t_data *img)
 	return (SUCCES);
 }
 
-
+//diviser 1 map 1 central
 int render(t_ctrl *ctrl)
 {
     int y;
+	t_xy	offset;
 
+	offset.x = WIN_WIDTH - 20 - ctrl->img.minimap.img_dim.x;
+	offset.y = 20;
     y = 0;
     while (y < WIN_HEIGHT)
     {
         ft_memcpy(ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len), 
             ctrl->img.F_C.addr + (y * ctrl->img.F_C.x_len), 
             ctrl->img.F_C.x_len);
+		if (y >= offset.y && y < offset.y + ctrl->img.minimap.img_dim.y)
+        {
+            int m_y = y - offset.y;
+            char *dst = ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len) + (offset.x * 4);
+            char *src = ctrl->img.minimap.addr + (m_y * ctrl->img.minimap.x_len);
+            ft_memcpy(dst, src, ctrl->img.minimap.x_len);
+        }
         y++;
     }
     mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.to_print.img, 0, 0);
     return (SUCCES);
 }
 
-int minimap_render(t_ctrl *ctrl)
-{
-    int y;
+// int minimap_render(t_ctrl *ctrl)
+// {
+//     int y;
 
-    y = 0;
-    while (y < (int)(ctrl->map->nb_line * ctrl->tile_size))
-    {
-        ft_memcpy(ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len), 
-            ctrl->img.minimap.addr + (y * ctrl->img.minimap.x_len), 
-            ctrl->img.minimap.x_len);
-        y++;
-    }
-    add_player(ctrl, &ctrl->img.to_print);
-    mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.to_print.img, 0, 0);
-    return (SUCCES);
-}
+//     y = 0;
+//     while (y < (int)(ctrl->map->nb_line * ctrl->tile_size))
+//     {
+//         ft_memcpy(ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len), 
+//             ctrl->img.minimap.addr + (y * ctrl->img.minimap.x_len), 
+//             ctrl->img.minimap.x_len);
+//         y++;
+//     }
+//     add_player(ctrl, &ctrl->img.to_print);
+//     mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.to_print.img, 0, 0);
+//     return (SUCCES);
+// }
 
