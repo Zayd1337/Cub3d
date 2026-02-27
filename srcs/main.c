@@ -33,6 +33,8 @@
 // 	my_mlx_pixel_put(ctrl->img.player)
 // }
 
+
+
 int	main(int argc, char **argv)
 {
 	t_ctrl	ctrl;
@@ -51,8 +53,10 @@ int	main(int argc, char **argv)
 	// 	return (false);
 	if (render(&ctrl) != SUCCES)
 		return (print_error(&ctrl), free_all(&ctrl), 1);
-	mlx_hook(ctrl.win, KeyPress, KeyPressMask, &keypress, &ctrl);
 	mlx_hook(ctrl.win, DestroyNotify, 0, &end, &ctrl);
+	mlx_hook(ctrl.win, KeyPress, KeyPressMask, &keypress, &ctrl);
+	mlx_hook(ctrl.win, KeyRelease, KeyReleaseMask, &keyrelease, &ctrl);
+	mlx_loop_hook(ctrl.mlx, &move, &ctrl);
 	mlx_loop(ctrl.mlx);
 	return (free_all(&ctrl), 0);
 }

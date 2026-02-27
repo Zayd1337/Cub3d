@@ -113,40 +113,190 @@ int	end(t_ctrl *ctrl)
 // 	return (false);
 // }
 
-int player_mov(t_ctrl *ctrl, int keysym)
+// void	set_next(t_ctrl *ctrl, t_coor *next, bool key_press[6], double step)
+// {
+// 	int key;
+
+// 	key = 0;
+// 	while (key_press[key] != true)
+// 		key++;
+// 	next->x = ctrl->player.precis.x;
+//     next->y = ctrl->player.precis.y;
+
+//     if (key == 0)// avancer
+//         next->y -= step;
+//     else if (key == 1)// reculer
+//         next->y += step;
+//     else if (key == 2) // gauche
+//         next->x -= step;
+//     else if (key == 3)// Droite
+//         next->x += step;
+// }
+
+bool	check_collision(t_ctrl *ctrl, double next_x, double next_y)
 {
-    double step = 1;
-	t_coor next;
-	t_xy tile;
+	t_xy xy;
 
-    next.x = ctrl->player.precis.x;
-    next.y = ctrl->player.precis.y;
-
-    if (keysym == XK_w)// avancer
-        next.y -= step;
-    else if (keysym == XK_s)// reculer
-        next.y += step;
-    else if (keysym == XK_a) // gauche
-        next.x -= step;
-    else if (keysym == XK_d)// Droite
-        next.x += step;
-    else
-		return (false);
-	tile.x = (int)next.x/ctrl->tile_size;
-	tile.y = (int)next.y/ctrl->tile_size;
-	printf ("test map[%d][%d]\n", tile.y, tile.x);
-    if (ctrl->map->map[tile.y][tile.x] != '1')
-    {
-        ctrl->player.precis.x = next.x;
-        ctrl->player.precis.y = next.y;
-		ctrl->player.map_c.x = tile.x;
-        ctrl->player.map_c.y = tile.y;
-		if (render(ctrl) != SUCCES)
-			return (false);
-        return (true);
-    }
-    return (printf("move impossible\n"), false);
+	if (!ctrl->map || !ctrl->map->map)
+		return (printf("map doesn't exist\n"), false);
+	xy.x = (int)next_x/ctrl->tile_size;
+	xy.y = (int)next_y/ctrl->tile_size;
+	if (ctrl->map->map[xy.y][xy.x] == '1')
+		return (printf("wall detected\n"), false);
+	return (true);
 }
+
+int move(t_ctrl *ctrl)
+{
+    double move_x = 0;
+    double move_y = 0;
+	t_coor next;
+	
+	int i = 0;
+	printf ("keypress : ");
+	while (ctrl->key_press[i])
+		printf ("[%d]", ctrl->key_press[i++]);
+	printf ("\n");
+    if (ctrl->key_press[0]) 
+		move_y -= SPEED; // W
+    if (ctrl->key_press[2]) 
+		move_y += SPEED; // S
+    if (ctrl->key_press[1]) 
+		move_x -= SPEED; // A
+    if (ctrl->key_press[3]) 
+		move_x += SPEED; // D
+    if (move_x == 0 && move_y == 0)
+        return (0);
+    
+    next.x = ctrl->player.precis.x + move_x;
+    next.y = ctrl->player.precis.y + move_y;
+    if (check_collision(ctrl, next.x, next.y))
+    {
+        ctrl->player.precis = next;
+		printf ("move\n");
+        render(ctrl);
+    }
+    return (0);
+}
+
+// int	move(t_ctrl *ctrl)
+// {
+// 	t_coor next;
+// 	t_xy tile;
+
+// 	if (!ctrl->map || !ctrl->map->map)
+// 		return (false);
+// 	set_next(ctrl, &next, ctrl->key_press, SPEED);
+// 	tile.x = (int)next.x/ctrl->tile_size;//ptetre pas ouf la division
+// 	tile.y = (int)next.y/ctrl->tile_size;
+// 	printf ("test map[%d][%d]\n", tile.y, tile.x);
+//     if (ctrl->map->map[tile.y][tile.x] != '1')
+//     {
+//         ctrl->player.precis.x = next.x;
+//         ctrl->player.precis.y = next.y;
+// 		ctrl->player.map_c.x = tile.x;
+//         ctrl->player.map_c.y = tile.y;
+// 		if (render(ctrl) != SUCCES)
+// 			return (false);
+//         return (true);
+//     }
+//     return (printf("move impossible\n"), false);
+// }
+
+// int move(t_ctrl *ctrl)
+// {
+//     t_coor next;
+//     t_xy tile;
+//     int i = 0;
+
+//     while (i < 4) // On check W, A, S, D
+//     {
+//         if (ctrl->key_press[i])
+//         {
+//             set_next(ctrl, &next, i, SPEED); // i est la direction
+//             tile.x = (int)next.x / ctrl->tile_size;
+//             tile.y = (int)next.y / ctrl->tile_size;
+
+//             // SECURITE : Vérifier si on est dans les limites de la map
+//             if (tile.y >= 0 && tile.y < (int)ctrl->map->nb_line && 
+//                 tile.x >= 0 && tile.x < (int)ctrl->map->len_line)
+//             {
+//                 if (ctrl->map->map[tile.y][tile.x] != '1')
+//                 {
+//                     ctrl->player.precis.x = next.x;
+//                     ctrl->player.precis.y = next.y;
+//                 }
+//             }
+//         }
+//         i++;
+//     }
+//     render(ctrl);
+//     return (0);
+// }
+
+int keypress(int keysym, t_ctrl *ctrl)
+{
+    if (keysym == XK_Escape)
+		end(ctrl);
+    if (keysym == XK_w) 
+		ctrl->key_press[0] = true;
+    if (keysym == XK_a) 
+		ctrl->key_press[1] = true;
+    if (keysym == XK_s) 
+		ctrl->key_press[2] = true;
+    if (keysym == XK_d) 
+		ctrl->key_press[3] = true;
+    return (0);
+}
+
+//???
+int keyrelease(int keysym, t_ctrl *ctrl)
+{
+    if (keysym == XK_w) 
+		ctrl->key_press[0] = false;
+    if (keysym == XK_a) 
+		ctrl->key_press[1] = false;
+    if (keysym == XK_s) 
+		ctrl->key_press[2] = false;
+    if (keysym == XK_d) 
+		ctrl->key_press[3] = false;
+    return (0);
+}
+
+// int player_mov(t_ctrl *ctrl, int keysym)
+// {
+//     double step = 1;
+// 	t_coor next;
+// 	t_xy tile;
+
+//     // next.x = ctrl->player.precis.x;
+//     // next.y = ctrl->player.precis.y;
+
+//     // if (keysym == XK_w)// avancer
+//     //     next.y -= step;
+//     // else if (keysym == XK_s)// reculer
+//     //     next.y += step;
+//     // else if (keysym == XK_a) // gauche
+//     //     next.x -= step;
+//     // else if (keysym == XK_d)// Droite
+//     //     next.x += step;
+//     else
+// 		return (false);
+// 	tile.x = (int)next.x/ctrl->tile_size;
+// 	tile.y = (int)next.y/ctrl->tile_size;
+// 	printf ("test map[%d][%d]\n", tile.y, tile.x);
+//     if (ctrl->map->map[tile.y][tile.x] != '1')
+//     {
+//         ctrl->player.precis.x = next.x;
+//         ctrl->player.precis.y = next.y;
+// 		ctrl->player.map_c.x = tile.x;
+//         ctrl->player.map_c.y = tile.y;
+// 		if (render(ctrl) != SUCCES)
+// 			return (false);
+//         return (true);
+//     }
+//     return (printf("move impossible\n"), false);
+// }
 
 // // Exemple de correction dans player_mov
 // void player_mov(t_ctrl *ctrl, double new_x, double new_y)
@@ -187,21 +337,63 @@ int player_mov(t_ctrl *ctrl, int keysym)
 // 	return (mv);
 // }
 
-int	keypress(int keysym, t_ctrl *ctrl)
-{
-	if (keysym == XK_Escape)
-		end(ctrl);
-	// else if (keysym == XK_Right)
-	// 	cam_mov();
-	// else if (keysym == XK_Left)
-	// 	cam_mov();
-	else if (keysym == XK_w)//avancer
-		player_mov(ctrl, keysym);
-	else if (keysym == XK_a)//aller a gauche
-		player_mov(ctrl, keysym);
-	else if (keysym == XK_s)//reculer
-		player_mov(ctrl, keysym);
-	else if (keysym == XK_d)//aller a droite
-		player_mov(ctrl, keysym);
-	return (0);
-}
+
+// int	keyrelease(int keysym, t_ctrl *ctrl)
+// {
+// 	if (ctrl->key_press[0] == true && keysym != XK_w)
+// 	{
+// 		ctrl->moving = -1;
+// 		ctrl->key_press[0] = false;
+// 	}
+// 	else if (ctrl->key_press[1] == true && keysym != XK_a)
+// 	{
+// 		ctrl->moving = -1;
+// 		ctrl->key_press[1] = false;
+// 	}
+// 	else if (ctrl->key_press[2] == true && keysym != XK_s)
+// 	{
+// 		ctrl->moving = -1;
+// 		ctrl->key_press[2] = false;
+// 	}	
+// 	else if (ctrl->key_press[3] == true && keysym != XK_d)
+// 	{
+// 		ctrl->moving = -1;
+// 		ctrl->key_press[3] = false;
+// 	}
+// 	// else if (ctrl->key_press[4] == true && keysym != XK_Right)
+// 	// 	ctrl->key_press[4] = false;
+// 	// else if (ctrl->key_press[5] == true && keysym != XK_Left)
+// 	// 	ctrl->key_press[5] = false;
+// 	return (0);
+// }
+
+// int	keypress(int keysym, t_ctrl *ctrl)
+// {
+// 	if (keysym == XK_Escape)
+// 		end(ctrl);
+// 	// else if (keysym == XK_Right)
+// 	// 	cam_mov();
+// 	// else if (keysym == XK_Left)
+// 	// 	cam_mov();
+// 	else if (keysym == XK_w)//avancer
+// 	{
+// 		ctrl->key_press[0] = true;
+// 		ctrl->moving = 0;
+// 	}
+// 	else if (keysym == XK_a)//aller a gauche
+// 	{
+// 		ctrl->key_press[1] = true;
+// 		ctrl->moving = 1;
+// 	}
+// 	else if (keysym == XK_s)//reculer
+// 	{
+// 		ctrl->key_press[2] = true;
+// 		ctrl->moving = 2;
+// 	}
+// 	else if (keysym == XK_d)//aller a droite
+// 	{
+// 		ctrl->key_press[3] = true;
+// 		ctrl->moving = 3;
+// 	}
+// 	return (0);
+// }
