@@ -9,8 +9,16 @@ NC              = \033[0m
 # -------------------- Compiler --------------------
 CC              = cc
 CFLAGS          = -Wall -Wextra -Werror -g
+ifdef OPTI
+	CFLAGS += -O3
+endif
 MLX_FLAGS		= -L $(MLX_PATH) -lmlx -lXext -lX11 -O3
 RM              = rm -rf
+
+# -------------- Configuration Valgrind -------------
+VAL_BIN   = valgrind
+VAL_FLAGS = --leak-check=full --show-leak-kinds=all --track-origins=yes #--quiet
+MAP = maps/good/subject_map.cub
 
 # -------------------- Directories --------------------
 SRC_DIR         = srcs
@@ -81,6 +89,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDES) -MMD -MP -c $< -o $@
 	@echo "$(YELLOW)Compiling: $< $(NC)"
+
+val: all
+	@echo "Running Cub3D with Valgrind...$(RESET)"
+	$(VAL_BIN) $(VAL_FLAGS) ./$(NAME) $(MAP)
 
 clean:
 	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory

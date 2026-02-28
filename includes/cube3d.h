@@ -21,7 +21,7 @@
 # define WIN_WIDTH 1280 
 # define WIN_HEIGHT 720
 
-#define	SPEED 1 //la vitesse du joueur
+#define	SPEED 0.5 //la vitesse du joueur
 
 typedef enum e_error
 {

@@ -108,9 +108,8 @@ bool	check_collision(t_ctrl *ctrl, double next_x, double next_y)
 		return (printf("map doesn't exist\n"), false);
 	xy.x = (int)next_x/ctrl->tile_size;
 	xy.y = (int)next_y/ctrl->tile_size;
-	printf ("map[%d][%d]\n", xy.y, xy.x);
 	if (ctrl->map->map[xy.y][xy.x] == '1')
-		return (printf("wall detected\n"), false);
+		return (false);
 	return (true);
 }
 
@@ -133,11 +132,9 @@ int move(t_ctrl *ctrl)
     
     next.x = ctrl->player.precis.x + move_x;
     next.y = ctrl->player.precis.y + move_y;
-	printf("next.x = %f, next.y = %f\n", next.x, next.y);
     if (check_collision(ctrl, next.x, next.y))
     {
         ctrl->player.precis = next;
-		printf ("move\n");
         render(ctrl);
     }
     return (0);
