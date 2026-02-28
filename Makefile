@@ -4,6 +4,7 @@ NAME            = cub3d
 GREEN           = \033[0;32m
 BLUE            = \033[0;34m
 YELLOW          = \033[0;33m
+PINK    		= \033[1;35m
 NC              = \033[0m
 
 # -------------------- Compiler --------------------
@@ -91,7 +92,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "$(YELLOW)Compiling: $< $(NC)"
 
 val: all
-	@echo "Running Cub3D with Valgrind...$(RESET)"
+	@echo "$(PINK)🤖 Running Cub3D with Valgrind 🤖$(NC)"
 	$(VAL_BIN) $(VAL_FLAGS) ./$(NAME) $(MAP)
 
 clean:
