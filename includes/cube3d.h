@@ -21,7 +21,8 @@
 # define WIN_WIDTH 1280 
 # define WIN_HEIGHT 720
 
-#define	SPEED 0.5 //la vitesse du joueur
+#define	MOVE_SPEED 5.0 //vitesse du joueur (carres/seconde)
+#define	ROT_SPEED 3.0 //vitesse de rotation (radians/seconde)
 
 typedef enum e_error
 {
@@ -117,8 +118,10 @@ typedef struct s_images
 
 typedef struct s_player
 {
-	t_xy	map_c;//coordonnees dans les unites de la map
-	t_coor	precis;//coordonnees en pixels dans les unites de la map
+	t_xy	map_c;  //coordonnees dans les unites de la map
+	t_coor	precis; //coordonnees en pixels dans les unites de la map
+	t_coor	dir;    //vecteur direction (norme 1)
+	t_coor	plane;  //plan camera (perpendiculaire a dir, FOV ~66deg)
 }t_player ;
 
 typedef struct s_ctrl
@@ -132,6 +135,9 @@ typedef struct s_ctrl
 	bool			key_press[6];//wasd<-->
 	t_error			error;
 	t_xy			p_minimap;
+	long			old_time;
+	double			move_speed;
+	double			rot_speed;
 } t_ctrl ;
 
 

@@ -28,6 +28,15 @@ int	init_minilibx(t_ctrl *ctrl)
 	ctrl->player.precis.x = ctrl->player.map_c.x*ctrl->tile_size + ctrl->tile_size/2;
 	ctrl->player.precis.y = ctrl->player.map_c.y*ctrl->tile_size + ctrl->tile_size/2;//le 20 c l'offset...
 	printf ("map[%d][%d], pix_coor : [%f][%f]\n", ctrl->player.map_c.y, ctrl->player.map_c.x, ctrl->player.precis.y, ctrl->player.precis.x);
+	// Init direction et plan camera selon orientation initiale (NO=0 SO=1 EA=2 WE=3)
+	if (ctrl->map->orientation == 0)      // North
+	{ ctrl->player.dir.x = 0; ctrl->player.dir.y = -1; ctrl->player.plane.x = 0.66; ctrl->player.plane.y = 0; }
+	else if (ctrl->map->orientation == 1)  // South
+	{ ctrl->player.dir.x = 0; ctrl->player.dir.y = 1; ctrl->player.plane.x = -0.66; ctrl->player.plane.y = 0; }
+	else if (ctrl->map->orientation == 2)  // East
+	{ ctrl->player.dir.x = 1; ctrl->player.dir.y = 0; ctrl->player.plane.x = 0; ctrl->player.plane.y = 0.66; }
+	else                                   // West
+	{ ctrl->player.dir.x = -1; ctrl->player.dir.y = 0; ctrl->player.plane.x = 0; ctrl->player.plane.y = -0.66; }
 	ctrl->win = mlx_new_window(ctrl->mlx, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
 	if (!ctrl->win)
 		return ((ctrl->error = MALLOC), ctrl->error);
@@ -91,4 +100,9 @@ void	init_struct(t_ctrl *ctrl)
 	ctrl->img.F_C.img = NULL;
 	ctrl->img.minimap.img = NULL;
 	ctrl->img.to_print.img = NULL;
+	struct timeval	tv;
+	gettimeofday(&tv, NULL);
+	ctrl->old_time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	ctrl->move_speed = 0;
+	ctrl->rot_speed = 0;
 }

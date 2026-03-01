@@ -113,31 +113,71 @@ bool	check_collision(t_ctrl *ctrl, double next_x, double next_y)
 	return (true);
 }
 
-int move(t_ctrl *ctrl)
+// pour avancer et recouler 
+bool	walk(t_ctrl *ctrl)
 {
-    double move_x = 0;
-    double move_y = 0;
-	t_coor next;
+	double	new_x;
+	double	new_y;
+	bool	moved;
 
-    if (ctrl->key_press[0]) 
-		move_y -= SPEED; // W
-    if (ctrl->key_press[2]) 
-		move_y += SPEED; // S
-    if (ctrl->key_press[1]) 
-		move_x -= SPEED; // A
-    if (ctrl->key_press[3]) 
-		move_x += SPEED; // D
-    if (move_x == 0 && move_y == 0)
-        return (0);
-    
-    next.x = ctrl->player.precis.x + move_x;
-    next.y = ctrl->player.precis.y + move_y;
-    if (check_collision(ctrl, next.x, next.y))
-    {
-        ctrl->player.precis = next;
-        render(ctrl);
-    }
-    return (0);
+	moved = false;
+	if (ctrl->key_press[0])
+	{
+		new_x = ctrl->player.precis.x + ctrl->player.dir.x * ctrl->move_speed;
+		new_y = ctrl->player.precis.y + ctrl->player.dir.y * ctrl->move_speed;
+		if (check_collision(ctrl, new_x, ctrl->player.precis.y))
+			ctrl->player.precis.x = new_x;
+		if (check_collision(ctrl, ctrl->player.precis.x, new_y))
+			ctrl->player.precis.y = new_y;
+		moved = true;
+	}
+	if (ctrl->key_press[2])
+	{
+		new_x = ctrl->player.precis.x - ctrl->player.dir.x * ctrl->move_speed;
+		new_y = ctrl->player.precis.y - ctrl->player.dir.y * ctrl->move_speed;
+		if (check_collision(ctrl, new_x, ctrl->player.precis.y))
+			ctrl->player.precis.x = new_x;
+		if (check_collision(ctrl, ctrl->player.precis.x, new_y))
+			ctrl->player.precis.y = new_y;
+		moved = true;
+	}
+	return (moved);
+}
+
+// A pour tourner a gauche  et   D pour tourner a droite
+bool	rotate(t_ctrl *ctrl)
+{
+	double	old_dir_x;
+	double	old_plane_x;
+	double	angle;
+
+	if (!ctrl->key_press[1] && !ctrl->key_press[3])
+		return (false);
+	angle = ctrl->key_press[1] ? ctrl->rot_speed : -ctrl->rot_speed;
+	old_dir_x = ctrl->player.dir.x;
+	ctrl->player.dir.x = ctrl->player.dir.x * cos(angle) - ctrl->player.dir.y * sin(angle);
+	ctrl->player.dir.y = old_dir_x * sin(angle) + ctrl->player.dir.y * cos(angle);
+	old_plane_x = ctrl->player.plane.x;
+	ctrl->player.plane.x = ctrl->player.plane.x * cos(angle) - ctrl->player.plane.y * sin(angle);
+	ctrl->player.plane.y = old_plane_x * sin(angle) + ctrl->player.plane.y * cos(angle);
+	return (true);
+}
+
+int	move(t_ctrl *ctrl)
+{
+	struct timeval	tv;
+	long			time;
+	double			frame_time;
+
+	gettimeofday(&tv, NULL);
+	time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	frame_time = (time - ctrl->old_time) / 1000.0;
+	ctrl->old_time = time;
+	ctrl->move_speed = frame_time * MOVE_SPEED * ctrl->tile_size;
+	ctrl->rot_speed = frame_time * ROT_SPEED;
+	if (walk(ctrl) | rotate(ctrl))
+		render(ctrl);
+	return (0);
 }
 
 int keypress(int keysym, t_ctrl *ctrl)
@@ -152,6 +192,10 @@ int keypress(int keysym, t_ctrl *ctrl)
 		ctrl->key_press[2] = true;
     if (keysym == XK_d) 
 		ctrl->key_press[3] = true;
+	// if (keysym == XK_left) 
+	// 	ctrl->key_press[4] = true;
+    // if (keysym == XK_right) 
+	// 	ctrl->key_press[5] = true;
     return (0);
 }
 
@@ -165,5 +209,9 @@ int keyrelease(int keysym, t_ctrl *ctrl)
 		ctrl->key_press[2] = false;
     if (keysym == XK_d) 
 		ctrl->key_press[3] = false;
+	// if (keysym == XK_left) 
+	// 	ctrl->key_press[4] = true;
+    // if (keysym == XK_right) 
+	// 	ctrl->key_press[5] = true;
     return (0);
 }

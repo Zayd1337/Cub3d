@@ -1,8 +1,8 @@
-#include "../../includes/cube3d.h"
+#include "../includes/cube3d.h"
 
 int	set_texture(t_ctrl *ctrl, char **tabl)
 {
-	int			i;
+	// int			i;
 	int			j;
 	static char	*tex[4] = {"NO", "SO", "EA", "WE"};
 
@@ -13,7 +13,7 @@ int	set_texture(t_ctrl *ctrl, char **tabl)
 			continue ;
 		if (ctrl->map->textures[j] != NULL)
 			return ((ctrl->error = INVALID_CONFIG), ctrl->error);
-		i = 0;
+		// i = 0;
 		ctrl->map->textures[j] = ft_strdup(tabl[1]);
 		if (!ctrl->map->textures[j])
 			return ((ctrl->error = MALLOC), ctrl->error);
