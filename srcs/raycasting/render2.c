@@ -41,8 +41,8 @@ int	add_player(t_ctrl *ctrl, t_data *img)
 	return (SUCCES);
 }
 
-// copie F_C (fond), overlay minimap, affiche le joueur
-int	render(t_ctrl *ctrl)
+// minimap rows
+static void	overlay_minimap(t_ctrl *ctrl)
 {
 	int		y;
 	int		m_y;
@@ -52,19 +52,27 @@ int	render(t_ctrl *ctrl)
 	y = 0;
 	while (y < WIN_HEIGHT)
 	{
-		ft_memcpy(ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len),
-			ctrl->img.F_C.addr + (y * ctrl->img.F_C.x_len),
-			ctrl->img.F_C.x_len);
-		if (y >= ctrl->p_minimap.y && y < ctrl->p_minimap.y + ctrl->img.minimap.img_dim.y)
+		if (y >= ctrl->p_minimap.y
+			&& y < ctrl->p_minimap.y + ctrl->img.minimap.img_dim.y)
 		{
 			m_y = y - ctrl->p_minimap.y;
-			dst = ctrl->img.to_print.addr + (y * ctrl->img.to_print.x_len) + (ctrl->p_minimap.x * 4);
+			dst = ctrl->img.to_print.addr
+				+ (y * ctrl->img.to_print.x_len)
+				+ (ctrl->p_minimap.x * 4);
 			src = ctrl->img.minimap.addr + (m_y * ctrl->img.minimap.x_len);
 			ft_memcpy(dst, src, ctrl->img.minimap.x_len);
 		}
 		y++;
 	}
+}
+//raycast (3D)
+int	render(t_ctrl *ctrl)
+{
+	if (render_frame(ctrl) != SUCCES)
+		return (MALLOC);
+	overlay_minimap(ctrl);
 	add_player(ctrl, &ctrl->img.to_print);
-	mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.to_print.img, 0, 0);
+	mlx_put_image_to_window(ctrl->mlx, ctrl->win, ctrl->img.to_print.img,
+		0, 0);
 	return (SUCCES);
 }

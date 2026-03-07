@@ -184,6 +184,17 @@ int	convert_rgb(int r, int g, int b);
 int	prepare_minimap(t_ctrl *ctrl);
 int	prepare_static(t_ctrl *ctrl);
 int	render(t_ctrl *ctrl);
+/*raycasting*/
+void	draw_floor_and_ceiling(t_ctrl *ctrl);
+void	perform_dda(t_ctrl *ctrl, t_ray *ray, double posX, double posY);
+void	compute_wall_projection(t_ray *ray, t_wall *wall,
+			double posX, double posY);
+void	draw_wall_stripe(t_ctrl *ctrl, int x, t_ray *ray, t_wall *wall);
+void	cast_rays(t_ctrl *ctrl);
+int		render_frame(t_ctrl *ctrl);
+int		tex_pixel(t_data *tex, int texX, int texY);
+void	put_pixel(t_data *img, int x, int y, int color);
+t_data	*choose_texture(t_ctrl *ctrl, t_ray *ray);
 
 /*-------------UTILS----------------*/
 void	free_tab(char **tab);

@@ -144,7 +144,7 @@ bool	walk(t_ctrl *ctrl)
 	return (moved);
 }
 
-// A pour tourner a gauche  et   D pour tourner a droite
+// A/left-arrow pour tourner a gauche  et   D/right-arrow pour tourner a droite
 bool	rotate(t_ctrl *ctrl)
 {
 	double	old_dir_x;
@@ -152,8 +152,10 @@ bool	rotate(t_ctrl *ctrl)
 	double	angle;
 
 	if (!ctrl->key_press[1] && !ctrl->key_press[3])
+		// && !ctrl->key_press[4] && !ctrl->key_press[5])
 		return (false);
-	angle = ctrl->key_press[1] ? ctrl->rot_speed : -ctrl->rot_speed;
+	angle = (ctrl->key_press[1])// || ctrl->key_press[4])
+		? ctrl->rot_speed : -ctrl->rot_speed;
 	old_dir_x = ctrl->player.dir.x;
 	ctrl->player.dir.x = ctrl->player.dir.x * cos(angle) - ctrl->player.dir.y * sin(angle);
 	ctrl->player.dir.y = old_dir_x * sin(angle) + ctrl->player.dir.y * cos(angle);
@@ -192,9 +194,9 @@ int keypress(int keysym, t_ctrl *ctrl)
 		ctrl->key_press[2] = true;
     if (keysym == XK_d) 
 		ctrl->key_press[3] = true;
-	// if (keysym == XK_left) 
+	// if (keysym == XK_Left)
 	// 	ctrl->key_press[4] = true;
-    // if (keysym == XK_right) 
+	// if (keysym == XK_Right)
 	// 	ctrl->key_press[5] = true;
     return (0);
 }
@@ -209,9 +211,9 @@ int keyrelease(int keysym, t_ctrl *ctrl)
 		ctrl->key_press[2] = false;
     if (keysym == XK_d) 
 		ctrl->key_press[3] = false;
-	// if (keysym == XK_left) 
-	// 	ctrl->key_press[4] = true;
-    // if (keysym == XK_right) 
-	// 	ctrl->key_press[5] = true;
+	// if (keysym == XK_Left)
+	// 	ctrl->key_press[4] = false;
+	// if (keysym == XK_Right)
+	// 	ctrl->key_press[5] = false;
     return (0);
 }
