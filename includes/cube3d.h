@@ -21,8 +21,8 @@
 # define WIN_WIDTH 1280 
 # define WIN_HEIGHT 720
 
-#define	MOVE_SPEED 5.0 //vitesse du joueur (carres/seconde)
-#define	ROT_SPEED 3.0 //vitesse de rotation (radians/seconde)
+#define	MOVE_SPEED 3.0 //vitesse du joueur (carres/seconde)
+#define	ROT_SPEED 2.0 //vitesse de rotation (radians/seconde)
 
 typedef enum e_error
 {

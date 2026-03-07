@@ -11,8 +11,7 @@ int	main(int argc, char **argv)
 		return (print_error(&ctrl), free_all(&ctrl), 1);
 	if (prepare_static(&ctrl) != SUCCES)
 		return (print_error(&ctrl), free_all(&ctrl), 1);
-	// if (raycasting() == false)
-	// 	return (false);
+
 	if (render(&ctrl) != SUCCES)
 		return (print_error(&ctrl), free_all(&ctrl), 1);
 	mlx_hook(ctrl.win, DestroyNotify, 0, &end, &ctrl);

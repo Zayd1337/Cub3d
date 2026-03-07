@@ -6,7 +6,6 @@ bool	set_tile_size(t_ctrl *ctrl)//ici on choisi la taille des unites de la minim
 
 	if (ctrl->map->len_line == 0 || ctrl->map->nb_line == 0)
     	return (false);
-	// mlx_get_screen_size(ctrl->mlx, &screen_size.x, &screen_size.y);
 	screen_size.x = WIN_WIDTH/4 / ctrl->map->len_line;
 	screen_size.y = WIN_HEIGHT/4 / ctrl->map->nb_line;
 
@@ -40,7 +39,6 @@ int	init_minilibx(t_ctrl *ctrl)
 	ctrl->win = mlx_new_window(ctrl->mlx, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
 	if (!ctrl->win)
 		return ((ctrl->error = MALLOC), ctrl->error);
-	// ctrl->minimap_size.x = ctrl->map->len_line*ctrl->tile_size;
 	if (set_img(ctrl) == false)
 		return ((ctrl->error = MALLOC), ctrl->error);
 	ctrl->p_minimap.x = WIN_WIDTH - 20 - ctrl->img.minimap.img_dim.x;

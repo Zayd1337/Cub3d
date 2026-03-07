@@ -1,8 +1,5 @@
 #include "../../includes/cube3d.h"
 
-// //donne la couleur color au pixel (x,y)
-//p sont les coordonnees du pixel qu'on veut remplir
-//win_s window_size = taille de l'image ou on ecrit
 int	my_mlx_pixel_put(t_data *data, t_xy p, t_xy win_s, int color)
 {
 	char	*dst;
@@ -104,56 +101,79 @@ bool	check_collision(t_ctrl *ctrl, double next_x, double next_y)
 	return (true);
 }
 
-// pour avancer et recouler 
-bool	walk(t_ctrl *ctrl)
+bool    walk(t_ctrl *ctrl)
 {
-	double	new_x;
-	double	new_y;
-	bool	moved;
+    double  new_x;
+    double  new_y;
+    double  margin;
+    bool    moved;
 
-	moved = false;
-	if (ctrl->key_press[0])
-	{
-		new_x = ctrl->player.precis.x + ctrl->player.dir.x * ctrl->move_speed;
-		new_y = ctrl->player.precis.y + ctrl->player.dir.y * ctrl->move_speed;
-		if (check_collision(ctrl, new_x, ctrl->player.precis.y))
-			ctrl->player.precis.x = new_x;
-		if (check_collision(ctrl, ctrl->player.precis.x, new_y))
-			ctrl->player.precis.y = new_y;
-		moved = true;
-	}
-	if (ctrl->key_press[2])
-	{
-		new_x = ctrl->player.precis.x - ctrl->player.dir.x * ctrl->move_speed;
-		new_y = ctrl->player.precis.y - ctrl->player.dir.y * ctrl->move_speed;
-		if (check_collision(ctrl, new_x, ctrl->player.precis.y))
-			ctrl->player.precis.x = new_x;
-		if (check_collision(ctrl, ctrl->player.precis.x, new_y))
-			ctrl->player.precis.y = new_y;
-		moved = true;
-	}
-	return (moved);
+    moved = false;
+    margin = 0.15;
+    if (ctrl->key_press[0])
+    {
+        new_x = ctrl->player.precis.x + ctrl->player.dir.x * ctrl->move_speed;
+        new_y = ctrl->player.precis.y + ctrl->player.dir.y * ctrl->move_speed;
+        if (check_collision(ctrl, new_x + (ctrl->player.dir.x * margin), ctrl->player.precis.y))
+            ctrl->player.precis.x = new_x;
+        if (check_collision(ctrl, ctrl->player.precis.x, new_y + (ctrl->player.dir.y * margin)))
+            ctrl->player.precis.y = new_y;
+        moved = true;
+    }
+    if (ctrl->key_press[1])
+    {
+        new_x = ctrl->player.precis.x - ctrl->player.dir.x * ctrl->move_speed;
+        new_y = ctrl->player.precis.y - ctrl->player.dir.y * ctrl->move_speed;
+        if (check_collision(ctrl, new_x - (ctrl->player.dir.x * margin), ctrl->player.precis.y))
+            ctrl->player.precis.x = new_x;
+        if (check_collision(ctrl, ctrl->player.precis.x, new_y - (ctrl->player.dir.y * margin)))
+            ctrl->player.precis.y = new_y;
+        moved = true;
+    }
+    if (ctrl->key_press[2])
+    {
+        new_x = ctrl->player.precis.x + ctrl->player.dir.y * ctrl->move_speed;
+        new_y = ctrl->player.precis.y - ctrl->player.dir.x * ctrl->move_speed;
+        if (check_collision(ctrl, new_x - (ctrl->player.dir.y * margin), ctrl->player.precis.y))
+            ctrl->player.precis.x = new_x;
+        if (check_collision(ctrl, ctrl->player.precis.x, new_y + (ctrl->player.dir.x * margin)))
+            ctrl->player.precis.y = new_y;
+        moved = true;
+    }
+    if (ctrl->key_press[3])
+    {
+        new_x = ctrl->player.precis.x - ctrl->player.dir.y * ctrl->move_speed;
+        new_y = ctrl->player.precis.y + ctrl->player.dir.x * ctrl->move_speed;
+        if (check_collision(ctrl, new_x + (ctrl->player.dir.y * margin), ctrl->player.precis.y))
+            ctrl->player.precis.x = new_x;
+        if (check_collision(ctrl, ctrl->player.precis.x, new_y - (ctrl->player.dir.x * margin)))
+            ctrl->player.precis.y = new_y;
+        moved = true;
+    }
+    return (moved);
 }
 
-// A/left-arrow pour tourner a gauche  et   D/right-arrow pour tourner a droite
-bool	rotate(t_ctrl *ctrl)
+bool rotate(t_ctrl *ctrl)
 {
-	double	old_dir_x;
-	double	old_plane_x;
-	double	angle;
+    double  old_dir_x;
+    double  old_plane_x;
+    double  angle;
 
-	if (!ctrl->key_press[1] && !ctrl->key_press[3])
-		// && !ctrl->key_press[4] && !ctrl->key_press[5])
-		return (false);
-	angle = (ctrl->key_press[1])// || ctrl->key_press[4])
-		? ctrl->rot_speed : -ctrl->rot_speed;
-	old_dir_x = ctrl->player.dir.x;
-	ctrl->player.dir.x = ctrl->player.dir.x * cos(angle) - ctrl->player.dir.y * sin(angle);
-	ctrl->player.dir.y = old_dir_x * sin(angle) + ctrl->player.dir.y * cos(angle);
-	old_plane_x = ctrl->player.plane.x;
-	ctrl->player.plane.x = ctrl->player.plane.x * cos(angle) - ctrl->player.plane.y * sin(angle);
-	ctrl->player.plane.y = old_plane_x * sin(angle) + ctrl->player.plane.y * cos(angle);
-	return (true);
+    if (!ctrl->key_press[4] && !ctrl->key_press[5])
+        return (false);
+    if (ctrl->key_press[4])
+        angle = -ctrl->rot_speed;
+    else
+        angle = ctrl->rot_speed;
+    old_dir_x = ctrl->player.dir.x;
+    ctrl->player.dir.x = ctrl->player.dir.x * cos(angle) - ctrl->player.dir.y * sin(angle);
+    ctrl->player.dir.y = old_dir_x * sin(angle) + ctrl->player.dir.y * cos(angle);
+
+    old_plane_x = ctrl->player.plane.x;
+    ctrl->player.plane.x = ctrl->player.plane.x * cos(angle) - ctrl->player.plane.y * sin(angle);
+    ctrl->player.plane.y = old_plane_x * sin(angle) + ctrl->player.plane.y * cos(angle);
+
+    return (true);
 }
 
 int	move(t_ctrl *ctrl)
@@ -179,16 +199,16 @@ int keypress(int keysym, t_ctrl *ctrl)
 		end(ctrl);
     if (keysym == XK_w) 
 		ctrl->key_press[0] = true;
-    if (keysym == XK_a) 
+	if (keysym == XK_s) 
 		ctrl->key_press[1] = true;
-    if (keysym == XK_s) 
+    if (keysym == XK_a) 
 		ctrl->key_press[2] = true;
     if (keysym == XK_d) 
 		ctrl->key_press[3] = true;
-	// if (keysym == XK_Left)
-	// 	ctrl->key_press[4] = true;
-	// if (keysym == XK_Right)
-	// 	ctrl->key_press[5] = true;
+	if (keysym == XK_Left)
+		ctrl->key_press[4] = true;
+	if (keysym == XK_Right)
+		ctrl->key_press[5] = true;
     return (0);
 }
 
@@ -196,15 +216,15 @@ int keyrelease(int keysym, t_ctrl *ctrl)
 {
     if (keysym == XK_w) 
 		ctrl->key_press[0] = false;
-    if (keysym == XK_a) 
+	 if (keysym == XK_s) 
 		ctrl->key_press[1] = false;
-    if (keysym == XK_s) 
+    if (keysym == XK_a) 
 		ctrl->key_press[2] = false;
     if (keysym == XK_d) 
 		ctrl->key_press[3] = false;
-	// if (keysym == XK_Left)
-	// 	ctrl->key_press[4] = false;
-	// if (keysym == XK_Right)
-	// 	ctrl->key_press[5] = false;
+	if (keysym == XK_Left)
+		ctrl->key_press[4] = false;
+	if (keysym == XK_Right)
+		ctrl->key_press[5] = false;
     return (0);
 }
