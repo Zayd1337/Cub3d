@@ -202,13 +202,13 @@ int keypress(int keysym, t_ctrl *ctrl)
 	if (keysym == XK_s) 
 		ctrl->key_press[1] = true;
     if (keysym == XK_a) 
-		ctrl->key_press[2] = true;
-    if (keysym == XK_d) 
-		ctrl->key_press[3] = true;
-	if (keysym == XK_Left)
 		ctrl->key_press[4] = true;
-	if (keysym == XK_Right)
+    if (keysym == XK_d) 
 		ctrl->key_press[5] = true;
+	// if (keysym == XK_Left)
+	// 	ctrl->key_press[4] = true;
+	// if (keysym == XK_Right)
+	// 	ctrl->key_press[5] = true;
     return (0);
 }
 
@@ -219,12 +219,12 @@ int keyrelease(int keysym, t_ctrl *ctrl)
 	 if (keysym == XK_s) 
 		ctrl->key_press[1] = false;
     if (keysym == XK_a) 
-		ctrl->key_press[2] = false;
-    if (keysym == XK_d) 
-		ctrl->key_press[3] = false;
-	if (keysym == XK_Left)
 		ctrl->key_press[4] = false;
-	if (keysym == XK_Right)
+    if (keysym == XK_d) 
 		ctrl->key_press[5] = false;
+	// if (keysym == XK_Left)
+	// 	ctrl->key_press[4] = false;
+	// if (keysym == XK_Right)
+	// 	ctrl->key_press[5] = false;
     return (0);
 }
