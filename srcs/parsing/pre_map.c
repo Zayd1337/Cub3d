@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pre_map.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/17 14:50:23 by jeazil            #+#    #+#             */
+/*   Updated: 2026/03/17 15:15:48 by jeazil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cube3d.h"
 
 int	correct_texture(t_ctrl *ctrl, char *line)
@@ -8,7 +20,8 @@ int	correct_texture(t_ctrl *ctrl, char *line)
 	tabl = split_tab(line, " \t\n,");
 	if (!tabl)
 		return ((ctrl->error = MALLOC), ctrl->error);
-	if ((flag_color = set_color(ctrl, tabl)) == INVALID_CONFIG)
+	flag_color = set_color(ctrl, tabl);
+	if (flag_color == INVALID_CONFIG)
 		return (free_tab(tabl), ctrl->error);
 	if (flag_color == 0 && set_texture(ctrl, tabl) != SUCCES)
 		return (free_tab(tabl), ctrl->error);
@@ -52,25 +65,42 @@ int	error_config(t_ctrl *ctrl)
 	return (true);
 }
 
+static int	parse_config_line(t_ctrl *ctrl, char *line)
+{
+	int	all_set;
+
+	all_set = (ctrl->map->colors_set + ctrl->map->textures_set == 6);
+	if (map_found(ctrl, line) && all_set)
+		return (1);
+	if (ft_strcmp(line, "\n") == 0)
+		return (SUCCES);
+	if (correct_texture(ctrl, line) != SUCCES)
+		return (ctrl->error);
+	return (SUCCES);
+}
+
 int	set_config(t_ctrl *ctrl, int fd)
 {
 	char	*line;
+	int		res;
 
-	while ((line = get_next_line(fd)))
+	line = get_next_line(fd);
+	while (line)
 	{
-		if ((map_found(ctrl, line) && ctrl->map->colors_set + ctrl->map->textures_set == 6))
+		res = parse_config_line(ctrl, line);
+		if (res == 1)
 			break ;
-		if (ft_strcmp(line, "\n") == 0)
-		{
-			free(line);
-			continue ;
-		}
-		if (correct_texture(ctrl, line) != SUCCES)
-			return (free(line), ctrl->error);
 		free(line);
+		if (res != SUCCES)
+			return (res);
+		line = get_next_line(fd);
 	}
-	if (line && !(ctrl->map->map_stock = ft_strdup(line)))
-		return ((ctrl->error = MALLOC), ctrl->error);
-	free(line);
+	if (line)
+	{
+		ctrl->map->map_stock = ft_strdup(line);
+		free(line);
+		if (!ctrl->map->map_stock)
+			return (ctrl->error = MALLOC, MALLOC);
+	}
 	return (SUCCES);
 }

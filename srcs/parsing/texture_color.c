@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture_color.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/17 17:33:29 by jeazil            #+#    #+#             */
+/*   Updated: 2026/03/17 17:33:30 by jeazil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cube3d.h"
 
 int	set_texture(t_ctrl *ctrl, char **tabl)
 {
-	// int			i;
 	int			j;
 	static char	*tex[4] = {"NO", "SO", "EA", "WE"};
 
@@ -12,27 +23,32 @@ int	set_texture(t_ctrl *ctrl, char **tabl)
 		if (ft_strcmp(tabl[0], tex[j]))
 			continue ;
 		if (ctrl->map->textures[j] != NULL)
-			return ((ctrl->error = INVALID_CONFIG), ctrl->error);
-		// i = 0;
+		{
+			ctrl->error = INVALID_CONFIG;
+			return (ctrl->error);
+		}
 		ctrl->map->textures[j] = ft_strdup(tabl[1]);
 		if (!ctrl->map->textures[j])
-			return ((ctrl->error = MALLOC), ctrl->error);
+		{
+			ctrl->error = MALLOC;
+			return (ctrl->error);
+		}
 		ctrl->map->textures_set++;
 		return (SUCCES);
 	}
-	return ((ctrl->error = error_config(ctrl)), ctrl->error);
+	ctrl->error = error_config(ctrl);
+	return (ctrl->error);
 }
 
-//donne le bon format couleur pour my_mlx_pixel_put() 
 int	convert_rgb(int r, int g, int b)
 {
 	return (r << 16 | g << 8 | b);
 }
 
-bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id)
+bool	correct_rgb(t_ctrl *ctrl, char **tabl, int id)
 {
-	int	i;
-	int nb;
+	int		i;
+	int		nb;
 	t_xy	rgb;
 
 	i = 0;
@@ -40,7 +56,7 @@ bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id)
 	{
 		nb = ft_atoi(tabl[i]);
 		if (nb < 0 || nb > 255)
-			return (printf ("correcr rgb\n"), false);
+			return (false);
 		if (i == 1)
 			rgb.x = nb;
 		if (i == 2)
@@ -76,7 +92,7 @@ int	set_color(t_ctrl *ctrl, char **tabl)
 		if (ctrl->map->color[type] != -1)
 			return ((ctrl->error = INVALID_CONFIG), ctrl->error);
 	}
-	if (correct_RGB(ctrl, tabl, type) == false)
+	if (correct_rgb(ctrl, tabl, type) == false)
 		return ((ctrl->error = INVALID_CONFIG), ctrl->error);
 	return (1);
 }

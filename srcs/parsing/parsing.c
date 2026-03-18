@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/17 14:24:45 by jeazil            #+#    #+#             */
+/*   Updated: 2026/03/18 09:42:19 by jeazil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cube3d.h"
 
 int	check_mapname(char *file_name)
@@ -16,9 +28,11 @@ int	check_mapname(char *file_name)
 
 int	set_map(t_ctrl *ctrl, int fd)
 {
-	if ((ctrl->error = fill_temp_map(ctrl, fd)) != SUCCES)
+	ctrl->error = fill_temp_map(ctrl, fd);
+	if (ctrl->error != SUCCES)
 		return (ctrl->error);
-	if ((ctrl->error = convert_in_tab(ctrl)) != SUCCES)
+	ctrl->error = convert_in_tab(ctrl);
+	if (ctrl->error != SUCCES)
 		return (ctrl->error);
 	return (SUCCES);
 }
@@ -29,7 +43,7 @@ int	check_file(char *name)
 	char	c;
 
 	if (!name)
-		return(-1);
+		return (-1);
 	fd = open(name, O_RDONLY);
 	if (fd == -1)
 		return (INVALID_FILE);
@@ -46,53 +60,17 @@ int	texture_file_exist(t_ctrl *ctrl)
 	i = 0;
 	while (i < 4)
 	{
-		if ((fd = check_file(ctrl->map->textures[i])) == -1)
+		fd = check_file(ctrl->map->textures[i]);
+		if (fd == -1)
 		{
 			free(ctrl->map->map_stock);
 			ctrl->error = INVALID_FILE;
 			return (ctrl->error);
 		}
-		close(fd); // proteger?
+		close(fd);
 		i++;
 	}
 	return (SUCCES);
-}
-
-void	print_error(t_ctrl *ctrl)
-{
-	t_error	error;
-
-	error = ctrl->error;
-	if (error == MALLOC)
-		ft_putstr_fd("Error\nMemory allocation failed\n", 1);
-	else if (error == SUCCES)
-		ft_putstr_fd("SUCCESS\n", 1);
-	else if (error == INVALID_INPUT)
-		ft_putstr_fd("Error\nInvalid input\n", 1);
-	else if (error == INVALID_FILE)
-		ft_putstr_fd("Error\nInvalid file\n", 1);
-	else if (error == EMPTY_FILE)
-		ft_putstr_fd("Error\nEmpty file\n", 1);
-	else if (error == INVALID_CONFIG)
-		ft_putstr_fd("Error\nA config asset is invalid\n", 1);
-	else if (error == CONFIG_MISSING)
-		ft_putstr_fd("Error\nA config asset is missing\n", 1);
-	else if (error == MAP_MISSING)
-		ft_putstr_fd("Error\nMap is missing\n", 1);
-	else if (error == MISSPLACED_ELEM)
-		ft_putstr_fd("Error\nMissplaced element\n", 1);
-	else if (error == INVALID_CHAR)
-		ft_putstr_fd("Error\nInvalid char found\n", 1);
-	else if (error == MULTIPLAYER)
-		ft_putstr_fd("Error\nMore than one player detected\n", 1);
-	else if (error == PLAYER_MISSING)
-		ft_putstr_fd("Error\nPlayer is missing\n", 1);
-	else if (error == STR_AFTER)
-		ft_putstr_fd("Error\nString at the end of the file\n", 1);
-	else if (error == INVALID_FILE_FORMAT)
-		ft_putstr_fd("Error\nInvalid file format\n", 1);
-	else if (error == INVALID_WALLS)
-		ft_putstr_fd("Error\nInvalid walls\n", 1);
 }
 
 int	parse_data(t_ctrl *ctrl, int argc, char **argv)
@@ -100,13 +78,12 @@ int	parse_data(t_ctrl *ctrl, int argc, char **argv)
 	int	fd;
 
 	if (argc != 2)
-		return ((ctrl->error = INVALID_INPUT),
-			ctrl->error);
+		return ((ctrl->error = INVALID_INPUT), ctrl->error);
 	if (check_mapname(argv[1]) != SUCCES)
 		return ((ctrl->error = INVALID_FILE), ctrl->error);
-	if ((fd = check_file(argv[1])) == INVALID_FILE)
-		return ((ctrl->error = INVALID_FILE),
-			ctrl->error);
+	fd = check_file(argv[1]);
+	if (fd == INVALID_FILE)
+		return ((ctrl->error = INVALID_FILE), ctrl->error);
 	if (init_map(ctrl, argv[1]) != SUCCES)
 		return (close(fd), ctrl->error);
 	if (set_config(ctrl, fd) != SUCCES)
@@ -117,6 +94,5 @@ int	parse_data(t_ctrl *ctrl, int argc, char **argv)
 		return (close(fd), ctrl->error);
 	if (parse_map(ctrl) != SUCCES)
 		return (close(fd), ctrl->error);
-	print_map_infos(ctrl);
 	return (close(fd), SUCCES);
 }

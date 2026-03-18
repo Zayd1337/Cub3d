@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tools.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/18 09:43:03 by jeazil            #+#    #+#             */
+/*   Updated: 2026/03/18 09:43:05 by jeazil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cube3d.h"
 
 int	count_ocurr(char *str, char c)
@@ -76,8 +88,8 @@ char	*remove_chars(char *line, char *to_rm)
 
 bool	char_found(char *str, char *searched)
 {
-	int len;
-	int i;
+	int	len;
+	int	i;
 
 	if (!str || !searched)
 		return (false);

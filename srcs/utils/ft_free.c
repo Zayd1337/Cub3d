@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/18 09:42:39 by jeazil            #+#    #+#             */
+/*   Updated: 2026/03/18 09:42:40 by jeazil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cube3d.h"
 
 void	free_tab(char **tab)
@@ -52,16 +64,16 @@ void	free_map(t_map *map)
 
 void	clean_img(t_ctrl *ctrl)
 {
-	if (ctrl->img.NO.img)
-		mlx_destroy_image(ctrl->mlx, ctrl->img.NO.img);
-	if (ctrl->img.SO.img)
-		mlx_destroy_image(ctrl->mlx, ctrl->img.SO.img);
-	if (ctrl->img.EA.img)
-		mlx_destroy_image(ctrl->mlx, ctrl->img.EA.img);
-	if (ctrl->img.WE.img)
-		mlx_destroy_image(ctrl->mlx, ctrl->img.WE.img);
-	if (ctrl->img.F_C.img)
-		mlx_destroy_image(ctrl->mlx, ctrl->img.F_C.img);
+	if (ctrl->img.no.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.no.img);
+	if (ctrl->img.so.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.so.img);
+	if (ctrl->img.ea.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.ea.img);
+	if (ctrl->img.we.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.we.img);
+	if (ctrl->img.f_c.img)
+		mlx_destroy_image(ctrl->mlx, ctrl->img.f_c.img);
 	if (ctrl->img.minimap.img)
 		mlx_destroy_image(ctrl->mlx, ctrl->img.minimap.img);
 	if (ctrl->img.to_print.img)

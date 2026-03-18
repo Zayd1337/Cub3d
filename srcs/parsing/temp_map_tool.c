@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   temp_map_tool.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/17 16:42:06 by jeazil            #+#    #+#             */
+/*   Updated: 2026/03/17 16:42:08 by jeazil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cube3d.h"
 
 t_temp_map	*add_node(char *line)
@@ -7,7 +19,8 @@ t_temp_map	*add_node(char *line)
 	if (!line)
 		return (NULL);
 	new = NULL;
-	if ((new = malloc(sizeof(t_temp_map))) == NULL)
+	new = malloc(sizeof(t_temp_map));
+	if (new == NULL)
 		return (NULL);
 	new->row = remove_chars(line, "\n");
 	if (new->row == NULL)
@@ -36,16 +49,40 @@ bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line)
 	while (current->next != NULL)
 		current = current->next;
 	current->next = new;
-	if (ctrl->map->len_line < (len = ft_strlen(line)))
+	len = ft_strlen(line);
+	if (ctrl->map->len_line < len)
 		ctrl->map->len_line = len;
 	return (true);
+}
+
+int	reload_line(t_ctrl *ctrl, char *line, bool end_map)
+{
+	char	*temp;
+
+	temp = remove_chars(line, "\n");
+	if (!temp)
+	{
+		ctrl->error = MALLOC;
+		return (ctrl->error);
+	}
+	if (!end_map && putlast(ctrl, &ctrl->map->temp_map, temp) == false)
+	{
+		ctrl->error = MALLOC;
+		return (free(temp), ctrl->error);
+	}
+	if (end_map && ft_strcmp(line, "\n"))
+	{
+		ctrl->error = STR_AFTER;
+		return (free(temp), ctrl->error);
+	}
+	ctrl->map->nb_line++;
+	return (free(temp), SUCCES);
 }
 
 int	fill_temp_map(t_ctrl *ctrl, int fd)
 {
 	char	*line;
 	bool	end_map;
-	char *temp;
 
 	end_map = false;
 	line = ctrl->map->map_stock;
@@ -53,44 +90,12 @@ int	fill_temp_map(t_ctrl *ctrl, int fd)
 	{
 		if (end_map == false && !ft_strcmp(line, "\n"))
 			end_map = true;
-		else
-		{
-			if ((temp = line), !(line = remove_chars(temp, "\n")))
-				return (free(temp), MALLOC);
-			free(temp);
-			if (!end_map && putlast(ctrl, &ctrl->map->temp_map, line) == false)
-				return (free(line), MALLOC);
-			if (end_map && ft_strcmp(line, "\n"))
-				return (free(line), STR_AFTER);
-			ctrl->map->nb_line++;
-		}
+		else if (reload_line(ctrl, line, end_map) != SUCCES)
+			return (ctrl->error);
 		free(line);
 		line = get_next_line(fd);
 	}
-	free(line);
 	return (SUCCES);
-}
-
-char	*set_len(char *line, int len)
-{
-	char	*toret;
-	int		i;
-
-	if (len == 0)
-		return (NULL);
-	toret = malloc(sizeof(char) * (len + 1));
-	if (!toret)
-		return (NULL);
-	i = 0;
-	while (*line)
-	{
-		toret[i++] = *line;
-		line++;
-	}
-	while (i < len)
-		toret[i++] = ' ';
-	toret[i] = '\0';
-	return (toret);
 }
 
 int	convert_in_tab(t_ctrl *ctrl)

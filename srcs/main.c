@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/18 09:40:36 by jeazil            #+#    #+#             */
+/*   Updated: 2026/03/18 09:40:37 by jeazil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cube3d.h"
 
 int	main(int argc, char **argv)
@@ -11,7 +23,6 @@ int	main(int argc, char **argv)
 		return (print_error(&ctrl), free_all(&ctrl), 1);
 	if (prepare_static(&ctrl) != SUCCES)
 		return (print_error(&ctrl), free_all(&ctrl), 1);
-
 	if (render(&ctrl) != SUCCES)
 		return (print_error(&ctrl), free_all(&ctrl), 1);
 	mlx_hook(ctrl.win, DestroyNotify, 0, &end, &ctrl);

@@ -1,4 +1,4 @@
-NAME            = cub3D
+NAME            = cube3D
 
 # -------------------- Colors --------------------
 GREEN           = \033[0;32m
@@ -8,7 +8,7 @@ NC              = \033[0m
 
 # -------------------- Compiler --------------------
 CC              = cc
-CFLAGS          = -Wall -Wextra -Werror -g
+CFLAGS          = -Wall -Wextra -Werror -g3
 ifdef OPTI
 	CFLAGS += -O3
 endif
@@ -24,12 +24,12 @@ MAP = maps/good/subject_map.cub
 SRC_DIR         = srcs
 OBJ_DIR         = obj
 INC_DIR         = includes 
-#-Subdirectories-
+
+#--------------------Subdirectories--------------------
 MLX_DIR			= mlx
 PARSING_DIR		= parsing
 RAYCASTING_DIR	= raycasting
 UTILS_DIR		= utils
-# TEXTURE_DIR		= textures
 
 # -------------------- Libraries --------------------
 LIBFT_DIR       = libft
@@ -40,8 +40,9 @@ INCLUDES        = -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_PATH)
 
 #---------------------Files-----------------------
 MAIN_FILES		= main.c
-MLX_FILES		= mlx.c
-PARSING_FILES	=	init.c\
+MLX_FILES		= hooks.c movment.c set_img.c
+PARSING_FILES	=	init1.c\
+					init2.c\
 					map_parse.c\
 					parsing.c\
 					pre_map.c\
@@ -54,13 +55,10 @@ RAYCASTING_FILES = 	raycasting.c\
 					render2.c
 UTILS_FILES		=	debug.c\
 					ft_free.c\
-					ft_strcmp.c\
-					tools.c\
-					split_tab.c
-# TEXTURES_FILES	=
+					utils.c\
+					tools.c
 
 # -------------------- Srcs --------------------
-# On ajoute le dossier srcs/ devant chaque fichier pour que la substitution fonctionne
 SRC_FILES       =	$(MAIN_FILES)\
 					$(addprefix $(MLX_DIR)/,$(MLX_FILES))\
 					$(addprefix $(PARSING_DIR)/,$(PARSING_FILES))\
@@ -70,7 +68,6 @@ SRC_FILES       =	$(MAIN_FILES)\
 SRCS            = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 
 # -------------------- Objects --------------------
-# On transforme srcs/file.c en obj/file.o
 OBJS            = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 DEPS            = $(OBJS:.o=.d)
 

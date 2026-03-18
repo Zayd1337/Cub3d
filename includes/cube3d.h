@@ -1,216 +1,211 @@
-#ifndef CUB3D_H
-#define CUB3D_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cube3d.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/17 13:56:22 by jeazil            #+#    #+#             */
+/*   Updated: 2026/03/17 18:00:36 by jeazil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#define _GNU_SOURCE
-#include "../minilibx-linux/mlx.h"
-#include "../libft/libft.h"
-#include "../libft/get_next_line_bonus.h"
-#include "struct.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/time.h>
-#include <math.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <string.h>
-# include <sys/types.h>
+#ifndef CUBE3D_H
+# define CUBE3D_H
+
+# define _GNU_SOURCE
+# include "../libft/get_next_line_bonus.h"
+# include "../libft/libft.h"
+# include "../minilibx-linux/mlx.h"
+# include "struct.h"
 # include <X11/X.h>
 # include <X11/keysym.h>
-#include <stdbool.h>
+# include <fcntl.h>
+# include <math.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <string.h>
+# include <sys/stat.h>
+# include <sys/time.h>
+# include <sys/types.h>
+# include <unistd.h>
 
-# define WIN_WIDTH 1280 
+# define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 
-#define	MOVE_SPEED 3.0 //vitesse du joueur (carres/seconde)
-#define	ROT_SPEED 2.0 //vitesse de rotation (radians/seconde)
+# define MOVE_SPEED 3.0
+# define ROT_SPEED 2.0
 
 typedef enum e_error
 {
 	SUCCES = 0,
 	MALLOC = -2,
-	INVALID_INPUT = 1,//debut seulement
-
-	INVALID_FILE = -1,//obligatoirement -1 
-
-	//config
+	INVALID_INPUT = 1,
+	INVALID_FILE = -1,
 	EMPTY_FILE = 2,
-	INVALID_CONFIG = 12,//!!! ni 1 ni 0
+	INVALID_CONFIG = 12,
 	CONFIG_MISSING = 3,
 	MAP_MISSING = 4,
 	MISSPLACED_ELEM = 5,
-
-	//parsemap
 	INVALID_CHAR = 6,
 	MULTIPLAYER = 7,
 	PLAYER_MISSING = 8,
 	INVALID_WALLS = 11,
 	STR_AFTER = 9,
-
-	//mlx
 	INVALID_FILE_FORMAT = 10
-}t_error;
+}						t_error;
 
 typedef struct s_xy
 {
-	int x;
-	int y;
-	int z;
-} t_xy;
+	int					x;
+	int					y;
+	int					z;
+}						t_xy;
 
-typedef struct s_coor//pour le player et les rayons
+typedef struct s_coor
 {
-	double x;
-	double y;
-} t_coor;
+	double				x;
+	double				y;
+}						t_coor;
 
-typedef struct s_temp_map//parsing only
+typedef struct s_temp_map
 {
-	char *row;
-	struct s_temp_map *next;
-} t_temp_map;
+	char				*row;
+	struct s_temp_map	*next;
+}						t_temp_map;
 
 typedef struct s_map
 {
-	//infos utiles
-	char *name;
+	char				*name;
+	char				**map;
+	char				*textures[4];
+	int					color[2];
+	size_t				nb_line;
+	size_t				len_line;
+	int					orientation;
+	int					textures_set;
+	int					colors_set;
+	bool				map_set;
+	t_temp_map			*temp_map;
+	char				*map_stock;
+}						t_map;
 
-	char **map;
-	char *textures[4];//N, S, E, W
-	int color[2];//F, C
-	size_t nb_line;
-	size_t	len_line;
-	int	orientation;//NO=0 SO=1 EA=2 WE=3
-
-	//parsing
-	int textures_set;//<4 = pas fini d'allouer
-	int	colors_set;//<2 = pas fini d'allouer
-	bool map_set;//== 0 = pas fini d'allouer
-	t_temp_map *temp_map;//ok
-	char *map_stock;//used
-} t_map;
-
-typedef struct s_data//mlx img
+typedef struct s_data
 {
-	t_xy			img_dim;//en pixel
-	void			*img;
-	char			*addr;
-	int				bpp;
-	int				x_len;
-	int				endian;
-}					t_data;
+	t_xy				img_dim;
+	void				*img;
+	char				*addr;
+	int					bpp;
+	int					x_len;
+	int					endian;
+}						t_data;
 
 typedef struct s_images
 {
-	//static
-	t_data	NO;
-	t_data	SO;
-	t_data	EA;
-	t_data	WE;
-	t_data	F_C;
-	t_xy	dimension;//dimension des textures?
-
-	t_data	minimap;//taille differente des autres
-	
-	//dynamique
-	t_data	to_print;
-	
-} t_images;
+	t_data				no;
+	t_data				so;
+	t_data				ea;
+	t_data				we;
+	t_data				f_c;
+	t_xy				dimension;
+	t_data				minimap;
+	t_data				to_print;
+}						t_images;
 
 typedef struct s_player
 {
-	t_xy	map_c;  //coordonnees dans les unites de la map
-	t_coor	precis; //coordonnees en pixels dans les unites de la map
-	t_coor	dir;    //vecteur direction (norme 1)
-	t_coor	plane;  //plan camera (perpendiculaire a dir, FOV ~66deg)
-}t_player ;
+	t_xy				map_c;
+	t_coor				precis;
+	t_coor				dir;
+	t_coor				plane;
+}						t_player;
 
 typedef struct s_ctrl
 {
-	void			*mlx;
-	void			*win;
-	t_map 			*map; 
-	t_images		img;
-	int				tile_size;//en pixels
-	t_player		player;
-	bool			key_press[6];//wasd<-->
-	t_error			error;
-	t_xy			p_minimap;
-	long			old_time;
-	double			move_speed;
-	double			rot_speed;
-} t_ctrl ;
-
+	void				*mlx;
+	void				*win;
+	t_map				*map;
+	t_images			img;
+	int					tile_size;
+	t_player			player;
+	bool				key_press[6];
+	t_error				error;
+	t_xy				p_minimap;
+	long				old_time;
+	double				move_speed;
+	double				rot_speed;
+}						t_ctrl;
 
 /*---------------MLX-----------------*/
 /*mlx*/
-int	end(t_ctrl *ctrl);
-int	keypress(int keysym, t_ctrl *ctrl);
-int	keyrelease(int keysym, t_ctrl *ctrl);
-int	move(t_ctrl *ctrl);
-bool	set_img(t_ctrl *ctrl);
+int						end(t_ctrl *ctrl);
+int						keypress(int keysym, t_ctrl *ctrl);
+int						keyrelease(int keysym, t_ctrl *ctrl);
+int						move(t_ctrl *ctrl);
+bool					set_img(t_ctrl *ctrl);
 
 /*----------------PARSING----------------*/
 /*init*/
-int    init_minilibx(t_ctrl *ctrl);
-void init_textures_colors(t_map *map);
-void	init_struct(t_ctrl *ctrl);
-int    init_map(t_ctrl *ctrl, char *name);
+int						init_minilibx(t_ctrl *ctrl);
+void					init_textures_colors(t_map *map);
+void					init_struct(t_ctrl *ctrl);
+int						init_map(t_ctrl *ctrl, char *name);
 /*map_parse*/
-int	parse_map(t_ctrl *ctrl);
+int						parse_map(t_ctrl *ctrl);
 /*parsing*/
-void	print_error(t_ctrl *ctrl);
-int	check_file(char *name);
-int	check_mapname(char *file_name);
-int	parse_data(t_ctrl *ctrl, int argc, char **argv);
+void					print_error(t_ctrl *ctrl);
+int						check_file(char *name);
+int						check_mapname(char *file_name);
+int						parse_data(t_ctrl *ctrl, int argc, char **argv);
 /*pre_map*/
-bool	map_found(t_ctrl *ctrl, char *line);
-int	correct_texture(t_ctrl *ctrl, char *line);
-int	set_config(t_ctrl *ctrl, int fd);
-int	error_config(t_ctrl *ctrl);
+bool					map_found(t_ctrl *ctrl, char *line);
+int						correct_texture(t_ctrl *ctrl, char *line);
+int						set_config(t_ctrl *ctrl, int fd);
+int						error_config(t_ctrl *ctrl);
 /*temp_map_tools*/
-int	fill_temp_map(t_ctrl *ctrl, int fd);
-int	convert_in_tab(t_ctrl *ctrl);
-t_temp_map	*add_node(char *line);
-bool	putlast(t_ctrl *ctrl, t_temp_map **head, char *line);
+int						fill_temp_map(t_ctrl *ctrl, int fd);
+int						convert_in_tab(t_ctrl *ctrl);
+t_temp_map				*add_node(char *line);
+bool					putlast(t_ctrl *ctrl, t_temp_map **head, char *line);
 /*texture_color*/
-int set_texture(t_ctrl *ctrl, char **tabl);
-bool	correct_RGB(t_ctrl *ctrl, char **tabl, int id);
-int	set_color(t_ctrl *ctrl, char **tabl);
+int						set_texture(t_ctrl *ctrl, char **tabl);
+bool					correct_rgb(t_ctrl *ctrl, char **tabl, int id);
+int						set_color(t_ctrl *ctrl, char **tabl);
 
 /*----------------RAYCASTING----------------*/
-int	my_mlx_pixel_put(t_data *data, t_xy p, t_xy win_s, int color);
-int	convert_rgb(int r, int g, int b);
+int						my_mlx_pixel_put(t_data *data, t_xy p, t_xy win_s,
+							int color);
+int						convert_rgb(int r, int g, int b);
 /*render*/
-int	prepare_minimap(t_ctrl *ctrl);
-int	prepare_static(t_ctrl *ctrl);
-int	render(t_ctrl *ctrl);
+int						prepare_static(t_ctrl *ctrl);
+int						render(t_ctrl *ctrl);
 /*raycasting*/
-void	draw_floor_and_ceiling(t_ctrl *ctrl);
-void	perform_dda(t_ctrl *ctrl, t_ray *ray, double posX, double posY);
-void	compute_wall_projection(t_ray *ray, t_wall *wall,
-			double posX, double posY);
-void	draw_wall_stripe(t_ctrl *ctrl, int x, t_ray *ray, t_wall *wall);
-void	cast_rays(t_ctrl *ctrl);
-int		render_frame(t_ctrl *ctrl);
-int		tex_pixel(t_data *tex, int texX, int texY);
-void	put_pixel(t_data *img, int x, int y, int color);
-t_data	*choose_texture(t_ctrl *ctrl, t_ray *ray);
+void					draw_floor_and_ceiling(t_ctrl *ctrl);
+void					perform_dda(t_ctrl *ctrl, t_ray *ray, t_coor pos);
+void					compute_wall_projection(t_ray *ray, t_wall *wall,
+							t_coor pos);
+void					draw_wall_stripe(t_ctrl *ctrl, int x, t_ray *ray,
+							t_wall *wall);
+void					cast_rays(t_ctrl *ctrl);
+int						render_frame(t_ctrl *ctrl);
+int						tex_pixel(t_data *tex, int texX, int texY);
+t_data					*choose_texture(t_ctrl *ctrl, t_ray *ray);
 
 /*-------------UTILS----------------*/
-void	free_tab(char **tab);
-int	ft_strcmp(const char *s1, const char *s2);
-int	count_elems(char **map, char c);
-int	count_ocurr(char *str, char c);
-char *remove_chars(char *line, char *to_rm);
-bool	char_found(char *str, char *searched);
-void	free_map(t_map *map);
-void	free_all(t_ctrl *ctrl);
-void	print_map_infos(t_ctrl *ctrl);
-void	print_chain(t_temp_map **head);
-void	free_chain(t_temp_map **head);
-char	**split_tab(char const *s, char *rm);
+char					*set_len(char *line, int len);
+void					free_tab(char **tab);
+int						ft_strcmp(const char *s1, const char *s2);
+int						count_elems(char **map, char c);
+int						count_ocurr(char *str, char c);
+char					*remove_chars(char *line, char *to_rm);
+bool					char_found(char *str, char *searched);
+void					free_map(t_map *map);
+void					free_all(t_ctrl *ctrl);
+void					print_map_infos(t_ctrl *ctrl);
+void					print_chain(t_temp_map **head);
+void					free_chain(t_temp_map **head);
+char					**split_tab(char const *s, char *rm);
 
 /*--------------------------------*/
-
 
 #endif

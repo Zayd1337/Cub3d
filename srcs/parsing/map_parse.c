@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_parse.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/17 14:24:27 by jeazil            #+#    #+#             */
+/*   Updated: 2026/03/17 14:26:18 by jeazil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cube3d.h"
 
 void	set_player(char o, t_ctrl *ctrl, int i, int j)
@@ -42,7 +54,6 @@ int	correct_elems(t_ctrl *ctrl, char **map)
 	return (SUCCES);
 }
 
-// closed/surrounded by walls
 bool	check_walls(t_ctrl *ctrl, char **map, int i, int j)
 {
 	if (i == 0 || j == 0 || i == (int)ctrl->map->len_line - 1
