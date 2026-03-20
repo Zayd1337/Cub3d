@@ -94,6 +94,10 @@ val: all
 	@echo "Running Cub3D with Valgrind...$(RESET)"
 	$(VAL_BIN) $(VAL_FLAGS) ./$(NAME) $(MAP)
 
+norm:
+	@echo "$(YELLOW)Vérification de la Norme...$(RESET)"
+	@norminette $(SRCS) ./srcs ./includes | grep -v "OK!" || echo "$(GREEN)Tout est à la norme !$(RESET)"
+
 clean:
 	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
 	@$(MAKE) -C $(MLX_PATH) clean --no-print-directory
