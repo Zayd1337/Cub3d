@@ -6,7 +6,7 @@
 /*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 13:56:22 by jeazil            #+#    #+#             */
-/*   Updated: 2026/03/17 18:00:36 by jeazil           ###   ########.fr       */
+/*   Updated: 2026/03/20 10:58:12 by jeazil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef enum e_error
 	MALLOC = -2,
 	INVALID_INPUT = 1,
 	INVALID_FILE = -1,
-	EMPTY_FILE = 2,
+	EMPTY_FILE = -3,
 	INVALID_CONFIG = 12,
 	CONFIG_MISSING = 3,
 	MAP_MISSING = 4,
@@ -192,6 +192,7 @@ int						tex_pixel(t_data *tex, int texX, int texY);
 t_data					*choose_texture(t_ctrl *ctrl, t_ray *ray);
 
 /*-------------UTILS----------------*/
+int						is_empty(int fd);
 char					*set_len(char *line, int len);
 void					free_tab(char **tab);
 int						ft_strcmp(const char *s1, const char *s2);

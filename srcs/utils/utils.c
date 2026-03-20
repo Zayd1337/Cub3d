@@ -6,7 +6,7 @@
 /*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 09:43:15 by jeazil            #+#    #+#             */
-/*   Updated: 2026/03/18 09:43:16 by jeazil           ###   ########.fr       */
+/*   Updated: 2026/03/20 10:58:56 by jeazil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,4 +100,15 @@ char	*set_len(char *line, int len)
 		toret[i++] = ' ';
 	toret[i] = '\0';
 	return (toret);
+}
+
+int	is_empty(int fd)
+{
+	int		byte;
+	char	c;
+
+	byte = read(fd, &c, 1);
+	if (byte <= 0)
+		return (EMPTY_FILE);
+	return (SUCCES);
 }

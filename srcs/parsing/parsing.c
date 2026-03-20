@@ -6,7 +6,7 @@
 /*   By: jeazil <jeazil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 14:24:45 by jeazil            #+#    #+#             */
-/*   Updated: 2026/03/18 09:42:19 by jeazil           ###   ########.fr       */
+/*   Updated: 2026/03/20 10:58:20 by jeazil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,16 @@ int	texture_file_exist(t_ctrl *ctrl)
 	while (i < 4)
 	{
 		fd = check_file(ctrl->map->textures[i]);
-		if (fd == -1)
+		if (fd == -1 || is_empty(fd) == EMPTY_FILE)
 		{
 			free(ctrl->map->map_stock);
-			ctrl->error = INVALID_FILE;
+			if (is_empty(fd) == EMPTY_FILE)
+			{
+				ctrl->error = EMPTY_FILE;
+				close(fd);
+			}
+			else
+				ctrl->error = INVALID_FILE;
 			return (ctrl->error);
 		}
 		close(fd);
